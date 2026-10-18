@@ -1,0 +1,1416 @@
+[
+  {
+    "id": "seo_audit_openai",
+    "name": "Analyze Any Website with OpenAI And Get On-Page SEO Audit",
+    "category": "SEO & Marketing",
+    "description": "Instantly find and fix technical and on-page SEO issues to improve search visibility.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "SEO",
+      "OpenAI",
+      "Audit",
+      "Website"
+    ]
+  },
+  {
+    "id": "telegram_memory_chatbot",
+    "name": "AI Agent Chatbot + LONG TERM Memory + Note Storage + Telegram",
+    "category": "AI Chatbots & Agents",
+    "description": "Builds an AI agent chatbot equipped with long-term memory and Google Docs/Telegram integration.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "Chatbot",
+      "Telegram",
+      "Memory",
+      "GoogleDocs"
+    ]
+  },
+  {
+    "id": "hacker_news_to_video",
+    "name": "Hacker News to Video Content",
+    "category": "Video & Media",
+    "description": "Automatically converts trending tech articles from Hacker News into engaging video content using AI.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "HackerNews",
+      "Video",
+      "Content",
+      "AI"
+    ]
+  },
+  {
+    "id": "wordpress_seo_autopost",
+    "name": "Automate SEO-Optimized WordPress Posts with AI & Google Sheets",
+    "category": "SEO & Marketing",
+    "description": "Streamlines blog creation from content generation and metadata optimization to publishing on WordPress.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "WordPress",
+      "SEO",
+      "GoogleSheets",
+      "Blogging"
+    ]
+  },
+  {
+    "id": "sql_query_from_schema",
+    "name": "Generate SQL queries from schema only - AI-powered",
+    "category": "Database & SQL",
+    "description": "Allows an AI agent to build and run SQL queries based strictly on database schemas without exposing underlying row data.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "SQL",
+      "Database",
+      "Schema",
+      "Security"
+    ]
+  },
+  {
+    "id": "ultimate_scraper_workflow",
+    "name": "Ultimate Scraper Workflow for n8n",
+    "category": "Web Scraping",
+    "description": "Combines Selenium and AI to scrape any webpage element or handle custom login sessions securely.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Scraping",
+      "Selenium",
+      "Browser",
+      "Extraction"
+    ]
+  },
+  {
+    "id": "clinic_management_multiagent",
+    "name": "Multi-Agent AI Clinic Management with WhatsApp, Telegram, and Google Calendar",
+    "category": "Productivity & Operations",
+    "description": "A modular system managing patient communication, appointment scheduling, and confirmations via chat.",
+    "trigger_type": "Webhook",
+    "nodes_count": 6,
+    "tags": [
+      "Clinic",
+      "WhatsApp",
+      "Telegram",
+      "Calendar"
+    ]
+  },
+  {
+    "id": "stock_technical_analysis",
+    "name": "Technical stock analysis with Telegram, Airtable and a GPT-powered AI Agent",
+    "category": "Finance & Crypto",
+    "description": "Performs technical market analysis using indicators like RSI and MACD, delivering reports via Telegram.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Finance",
+      "Stocks",
+      "Telegram",
+      "Airtable"
+    ]
+  },
+  {
+    "id": "retell_lead_qualification",
+    "name": "Automate Lead Qualification with RetellAI Phone Agent, OpenAI GPT & Google Sheet",
+    "category": "Sales & Outreach",
+    "description": "Handles outbound and inbound sales calls to qualify prospects and log details into Google Sheets.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Sales",
+      "VoiceAI",
+      "RetellAI",
+      "Leads"
+    ]
+  },
+  {
+    "id": "timesheet_generator_ai",
+    "name": "AI Timesheet Generator with Gmail, Calendar & GitHub to Google Sheets",
+    "category": "Productivity & Operations",
+    "description": "Tracks work activities across platforms to automatically log hours and update timesheets.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "Timesheet",
+      "GitHub",
+      "Gmail",
+      "Productivity"
+    ]
+  },
+  {
+    "id": "sales_cold_calling_pipeline",
+    "name": "Automate Sales Cold Calling Pipeline with Apify, GPT-4o, and WhatsApp",
+    "category": "Sales & Outreach",
+    "description": "Scales outbound sales pipelines by finding prospects and sending tailored chat outreach.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "ColdCalling",
+      "Apify",
+      "WhatsApp",
+      "Sales"
+    ]
+  },
+  {
+    "id": "financial_reports_gemini",
+    "name": "Generate Monthly Financial Reports with Gemini AI, SQL, and Outlook",
+    "category": "Finance & Crypto",
+    "description": "Pulls financial metrics, synthesizes insights with Gemini, and emails formatted reports to stakeholders.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Finance",
+      "Gemini",
+      "SQL",
+      "Outlook"
+    ]
+  },
+  {
+    "id": "telegram_menu_bot",
+    "name": "Telegram Bot with Menu-Driven Commands",
+    "category": "AI Chatbots & Agents",
+    "description": "Sets up an interactive menu system inside Telegram for seamless command execution.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Telegram",
+      "Bot",
+      "Commands",
+      "Interactive"
+    ]
+  },
+  {
+    "id": "social_videos_kling_ai",
+    "name": "Generate & Auto-Post Social Videos to Multiple Platforms with GPT-4 and Kling AI",
+    "category": "Video & Media",
+    "description": "End-to-end automation for creating short-form videos and distributing them across channels.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "Video",
+      "SocialMedia",
+      "KlingAI",
+      "Shorts"
+    ]
+  },
+  {
+    "id": "carousels_tiktok_instagram",
+    "name": "Generate and publish carousels for TikTok and Instagram with GPT-Image-1",
+    "category": "Social Media",
+    "description": "Dynamically builds and schedules image-based carousel posts for social reach.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Carousels",
+      "Instagram",
+      "TikTok",
+      "Images"
+    ]
+  },
+  {
+    "id": "web_monitoring_slack",
+    "name": "AI-Powered Information Monitoring with OpenAI, Google Sheets, Jina AI and Slack",
+    "category": "DevOps & Monitoring",
+    "description": "Scrapes web pages on a schedule and notifies teams in Slack regarding important updates.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Monitoring",
+      "Slack",
+      "JinaAI",
+      "Sheets"
+    ]
+  },
+  {
+    "id": "dental_voice_agent",
+    "name": "Voice Agent for Dental Appointment Booking with Gemini AI",
+    "category": "Productivity & Operations",
+    "description": "Handles voice inquiries for dental offices and checks live calendar availability.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Voice",
+      "Booking",
+      "Dental",
+      "Gemini"
+    ]
+  },
+  {
+    "id": "supabase_postgres_chat",
+    "name": "AI Agent to chat with Supabase/PostgreSQL DB",
+    "category": "Database & SQL",
+    "description": "Enables natural language querying of SQL database tables through an interactive chat interface.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "PostgreSQL",
+      "Supabase",
+      "SQL",
+      "Chatbot"
+    ]
+  },
+  {
+    "id": "youtube_summarizer_chatbot",
+    "name": "Ultimate AI-Powered Chatbot for YouTube Summarization & Analysis",
+    "category": "Video & Media",
+    "description": "Transcribes, extracts, and answers questions about any YouTube video link provided.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "YouTube",
+      "Transcribe",
+      "Summarizer",
+      "Chatbot"
+    ]
+  },
+  {
+    "id": "telegram_research_assistant",
+    "name": "AI Research Assistant via Telegram (GPT-4o mini + DeepSeek R1 + SerpAPI)",
+    "category": "AI Chatbots & Agents",
+    "description": "Comprehensive multi-model assistant executing web searches and deep syntheses on demand.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "Research",
+      "DeepSeek",
+      "SerpAPI",
+      "Telegram"
+    ]
+  },
+  {
+    "id": "invoice_email_to_sheets",
+    "name": "Extract Invoice Data from Email to Google Sheets using GPT-4o AI Automation",
+    "category": "Productivity & Operations",
+    "description": "Monitors mailboxes for invoice PDFs, extracts totals and dates, and logs them into accounting sheets.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Invoices",
+      "PDF",
+      "Email",
+      "Accounting"
+    ]
+  },
+  {
+    "id": "llama_parse_documents",
+    "name": "Advanced AI Powered Document Parsing & Text Extraction with Llama Parse",
+    "category": "Database & SQL",
+    "description": "Handles complex layout parsing across unstructured documents for cleaner downstream data manipulation.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "LlamaParse",
+      "Documents",
+      "Extraction",
+      "OCR"
+    ]
+  },
+  {
+    "id": "security_compliance_digest",
+    "name": "Intelligent AI Digest for Security, Privacy, and Compliance Feeds",
+    "category": "DevOps & Monitoring",
+    "description": "Aggregates and filters security advisories into a single daily summary update.",
+    "trigger_type": "Schedule",
+    "nodes_count": 3,
+    "tags": [
+      "Security",
+      "Compliance",
+      "Advisories",
+      "Digest"
+    ]
+  },
+  {
+    "id": "document_qa_gemini_supabase",
+    "name": "Document Q&A Chatbot with Gemini AI and Supabase Vector Search for Telegram",
+    "category": "Database & SQL",
+    "description": "Implements a RAG pipeline backed by vector search for robust file querying over Telegram.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "RAG",
+      "VectorSearch",
+      "Supabase",
+      "Gemini"
+    ]
+  },
+  {
+    "id": "linkedin_job_signals",
+    "name": "Scrape LinkedIn Job Listings for Hiring Signals & Prospecting with Bright Data",
+    "category": "Sales & Outreach",
+    "description": "Automated lead discovery parsing open job postings to identify active corporate hiring needs.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "LinkedIn",
+      "Hiring",
+      "Prospecting",
+      "BrightData"
+    ]
+  },
+  {
+    "id": "heygen_video_voice_clone",
+    "name": "Generate AI Videos from Text with HeyGen and Voice Cloning",
+    "category": "Video & Media",
+    "description": "Creates talking-head presentation assets and personalized video segments automatically.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "HeyGen",
+      "Video",
+      "Avatar",
+      "VoiceCloning"
+    ]
+  },
+  {
+    "id": "image_optimizer_cdn",
+    "name": "Convert Image Files (JPG, PNG) to URLs and Reduce File Size for FREE",
+    "category": "DevOps & Monitoring",
+    "description": "Utility workflow for optimizing user-uploaded visual media assets in automation pipelines.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Images",
+      "Optimization",
+      "CDN",
+      "Storage"
+    ]
+  },
+  {
+    "id": "pdf_rag_mistral_qdrant",
+    "name": "Build a PDF Document RAG System with Mistral OCR, Qdrant and Gemini AI",
+    "category": "Database & SQL",
+    "description": "Advanced OCR parsing combined with vector storage to build precise document query systems.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MistralOCR",
+      "Qdrant",
+      "RAG",
+      "Gemini"
+    ]
+  },
+  {
+    "id": "youtube_shorts_generator",
+    "name": "YouTube Shorts Automation Tool",
+    "category": "Video & Media",
+    "description": "Fully automates idea generation, scriptwriting, video rendering, and uploading workflows.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "YouTubeShorts",
+      "Social",
+      "Rendering",
+      "Automation"
+    ]
+  },
+  {
+    "id": "telegram_mcp_task_manager",
+    "name": "AI-Powered Telegram Task Manager with MCP Server",
+    "category": "MCP Protocols",
+    "description": "Leverages Model Context Protocol servers to route tasks seamlessly from a chat window.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "Telegram",
+      "TaskManager",
+      "Tools"
+    ]
+  },
+  {
+    "id": "viral_trends_social_poster",
+    "name": "Extract Trends, Auto-Generate Social Content with AI, Reddit, Google & Post",
+    "category": "Social Media",
+    "description": "Surfaces trending topics from search and social platforms to draft viral marketing posts.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Reddit",
+      "Trends",
+      "SocialMedia",
+      "Marketing"
+    ]
+  },
+  {
+    "id": "gemini_multimodal_telegram",
+    "name": "Conversational AI Chatbot with Google Gemini for Text & Image | Telegram",
+    "category": "AI Chatbots & Agents",
+    "description": "Multimodal assistant capable of reviewing images and responding contextually in text.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Gemini",
+      "Multimodal",
+      "Vision",
+      "Telegram"
+    ]
+  },
+  {
+    "id": "rag_starter_template",
+    "name": "RAG Starter Template using Simple Vector Stores, Form trigger and OpenAI",
+    "category": "Database & SQL",
+    "description": "Minimalist beginner guide for setting up Retrieval-Augmented Generation workflows.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "RAG",
+      "VectorStore",
+      "OpenAI",
+      "Starter"
+    ]
+  },
+  {
+    "id": "infranodus_graph_rag",
+    "name": "Telegram AI Chatbot Agent with InfraNodus GraphRAG Knowledge Base",
+    "category": "AI Chatbots & Agents",
+    "description": "Graph-based knowledge retrieval tool replacing heavy vector stores with semantic network structures.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "GraphRAG",
+      "KnowledgeGraph",
+      "Telegram",
+      "Semantic"
+    ]
+  },
+  {
+    "id": "gmail_smart_organization",
+    "name": "Intelligent Email Organization with AI-Powered Content Classification for Gmail",
+    "category": "Productivity & Operations",
+    "description": "Automatically categorizes, prioritizes, and labels incoming messages in Gmail.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Gmail",
+      "Classification",
+      "Productivity",
+      "Labels"
+    ]
+  },
+  {
+    "id": "linkedin_dalle_poster",
+    "name": "Automated LinkedIn Content Creation with GPT-4 and DALL-E for Scheduled Posts",
+    "category": "Social Media",
+    "description": "Generates text hooks and matching custom brand visuals for professional network distribution.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "LinkedIn",
+      "DALLE",
+      "Scheduling",
+      "Branding"
+    ]
+  },
+  {
+    "id": "linkedin_lead_scoring_sheets",
+    "name": "Search LinkedIn companies, Score with AI and add them to Google Sheet CRM",
+    "category": "Sales & Outreach",
+    "description": "Discovers business leads, evaluates their fitness score using LLMs, and stores them neatly in Google Sheets.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "LinkedIn",
+      "LeadScoring",
+      "CRM",
+      "GoogleSheets"
+    ]
+  },
+  {
+    "id": "perplexity_search_pipeline",
+    "name": "Query Perplexity AI from your n8n workflows",
+    "category": "AI Chatbots & Agents",
+    "description": "Integrates Perplexity's real-time conversational search engines directly into custom steps.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Perplexity",
+      "Search",
+      "Web",
+      "AI"
+    ]
+  },
+  {
+    "id": "seo_seed_keywords_generator",
+    "name": "Generate SEO Seed Keywords Using AI",
+    "category": "SEO & Marketing",
+    "description": "Analyzes ideal customer profiles to formulate comprehensive lists of high-value search keywords.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Keywords",
+      "SEO",
+      "Strategy",
+      "CustomerProfile"
+    ]
+  },
+  {
+    "id": "coinmarketcap_data_analyst",
+    "name": "Analyze Crypto Markets with the AI-Powered CoinMarketCap Data Analyst",
+    "category": "Finance & Crypto",
+    "description": "Multi-agent pipeline fetching centralized and decentralized crypto trends for market tracking.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Crypto",
+      "CoinMarketCap",
+      "Analytics",
+      "Trading"
+    ]
+  },
+  {
+    "id": "gemini_pdf_image_processor",
+    "name": "5 Ways to Process Images & PDFs with Gemini AI in n8n",
+    "category": "Database & SQL",
+    "description": "Educational blueprint highlighting different architectural approaches for multimodal AI tasks.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Gemini",
+      "PDF",
+      "Vision",
+      "Processing"
+    ]
+  },
+  {
+    "id": "tavily_web_researcher",
+    "name": "The Ultimate Free AI-Powered Researcher with Tavily Web Search & Extract",
+    "category": "AI Chatbots & Agents",
+    "description": "Autonomous web search agent filtering relevant sources to draft comprehensive summaries.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Tavily",
+      "Research",
+      "WebSearch",
+      "Synthesis"
+    ]
+  },
+  {
+    "id": "auto_service_social_marketing",
+    "name": "AI content generation for Auto Service - Automate your social media!",
+    "category": "Social Media",
+    "description": "Specialized marketing automation tailored for automotive repair shops and mechanics.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "AutoService",
+      "Niche",
+      "Marketing",
+      "Social"
+    ]
+  },
+  {
+    "id": "ai_vision_image_validator",
+    "name": "Automate Image Validation Tasks using AI Vision",
+    "category": "DevOps & Monitoring",
+    "description": "Uses vision-language models to verify whether user-uploaded photos meet specific criteria.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Vision",
+      "ImageValidation",
+      "QC",
+      "Moderation"
+    ]
+  },
+  {
+    "id": "brand_voice_blog_creator",
+    "name": "Automate Blog Creation in Brand Voice with AI",
+    "category": "SEO & Marketing",
+    "description": "Quick-training pipeline adapting standard LLM outputs to match a company's specific style guide.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "BrandVoice",
+      "Blogging",
+      "StyleGuide",
+      "Content"
+    ]
+  },
+  {
+    "id": "youtube_insights_extractor",
+    "name": "Turn YouTube Videos into Summaries, Transcripts, and Visual Insights",
+    "category": "Video & Media",
+    "description": "Comprehensive media analyzer extracting text transcripts and action moments from videos.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "YouTube",
+      "Transcripts",
+      "Insights",
+      "Video"
+    ]
+  },
+  {
+    "id": "fal_ai_image_generator",
+    "name": "AI image generator from text built on fal.ai",
+    "category": "Video & Media",
+    "description": "Secure API endpoint template translating prompts into stylized images with safety filters.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "FalAI",
+      "ImageGen",
+      "Diffusion",
+      "API"
+    ]
+  },
+  {
+    "id": "outlook_email_autoresponder",
+    "name": "Reply to Outlook Emails with OpenAI",
+    "category": "Productivity & Operations",
+    "description": "Learns personal writing tones to draft context-aware replies for Microsoft Outlook users.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Outlook",
+      "Email",
+      "AutoReply",
+      "ToneMatching"
+    ]
+  },
+  {
+    "id": "retell_phone_calendar_agent",
+    "name": "Build an AI Powered Phone Agent with Retell, Google Calendar and RAG",
+    "category": "Sales & Outreach",
+    "description": "Voice-interactive assistant handling scheduling and policy queries over phone networks.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "RetellAI",
+      "Voice",
+      "Calendar",
+      "RAG"
+    ]
+  },
+  {
+    "id": "n8n_expressions_tutorial",
+    "name": "Learn n8n Expressions with an Interactive Step-by-Step Tutorial for Beginners",
+    "category": "DevOps & Monitoring",
+    "description": "Hands-on canvas guide teaching data navigation and expression syntax.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Tutorial",
+      "Expressions",
+      "Beginner",
+      "Canvas"
+    ]
+  },
+  {
+    "id": "linkedin_post_approval_flow",
+    "name": "AI-Generated LinkedIn Posts with OpenAI, Google Sheets & Email Approval Workflow",
+    "category": "Social Media",
+    "description": "Drafts social content and triggers an email review prompt before final publishing.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "ApprovalFlow",
+      "HumanInTheLoop",
+      "LinkedIn",
+      "Email"
+    ]
+  },
+  {
+    "id": "email_attachment_archiver",
+    "name": "AI Email Analyzer: Process PDFs, Images & Save to Google Drive + Telegram",
+    "category": "Productivity & Operations",
+    "description": "Consolidates attachment processing, cloud archiving, and summary messaging.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Email",
+      "Attachments",
+      "GoogleDrive",
+      "Telegram"
+    ]
+  },
+  {
+    "id": "baserow_telegram_assistant",
+    "name": "All-in-One Telegram/Baserow AI Assistant (Voice/Photo/Save Notes/Long Term Mem)",
+    "category": "AI Chatbots & Agents",
+    "description": "Comprehensive life-management assistant processing voice notes and persistent memory.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "Baserow",
+      "VoiceNotes",
+      "Memory",
+      "Telegram"
+    ]
+  },
+  {
+    "id": "langchain_telegram_bot",
+    "name": "Agentic Telegram AI bot with LangChain nodes and new tools",
+    "category": "AI Chatbots & Agents",
+    "description": "Advanced tool-calling agent framework using native LangChain components.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "LangChain",
+      "Tools",
+      "Agentic",
+      "Telegram"
+    ]
+  },
+  {
+    "id": "daily_news_digest_whatsapp",
+    "name": "Daily News Digest: Summarize RSS Feeds with OpenAI and Deliver to WhatsApp",
+    "category": "Social Media",
+    "description": "Collects multi-source RSS content, compiles brief digests, and messages them directly.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "RSS",
+      "News",
+      "WhatsApp",
+      "Digest"
+    ]
+  },
+  {
+    "id": "brave_search_mcp_chatbot",
+    "name": "Build a Web Search Chatbot with GPT-4o and MCP Brave Search",
+    "category": "MCP Protocols",
+    "description": "Integrates Model Context Protocol tools to enhance web retrieval accuracy.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "BraveSearch",
+      "Web",
+      "Chatbot"
+    ]
+  },
+  {
+    "id": "asmr_shorts_generator",
+    "name": "Create & Upload AI-Generated ASMR YouTube Shorts with Seedance, Fal AI, and GPT-4",
+    "category": "Video & Media",
+    "description": "Fully automated pipeline for generating and publishing satisfying short-form videos.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "YouTubeShorts",
+      "ASMR",
+      "FalAI",
+      "Video"
+    ]
+  },
+  {
+    "id": "apollo_lead_enricher",
+    "name": "Generate & Enrich LinkedIn Leads with Apollo.io, LinkedIn API, Mail.so & GPT-3.5",
+    "category": "Sales & Outreach",
+    "description": "Streamlines outreach list building with multi-source contact validation.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "Apollo",
+      "Enrichment",
+      "Leads",
+      "Validation"
+    ]
+  },
+  {
+    "id": "blog_creation_approval_flow",
+    "name": "Automate Blog Content Creation with OpenAI, Google Sheets & Email Approval Flow",
+    "category": "SEO & Marketing",
+    "description": "Scales SEO article production while keeping a human-in-the-loop review step.",
+    "trigger_type": "Schedule",
+    "nodes_count": 5,
+    "tags": [
+      "Editorial",
+      "Approval",
+      "SEO",
+      "Blogging"
+    ]
+  },
+  {
+    "id": "imagen_brand_logo_generator",
+    "name": "Generate Logos and Images with Consistent Visual Styles using Imagen 3.0",
+    "category": "Social Media",
+    "description": "Remixes brand assets and generates stylistic design variants using Google Imagen.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Imagen",
+      "Branding",
+      "Logos",
+      "Design"
+    ]
+  },
+  {
+    "id": "tiktok_watermarkless_downloader",
+    "name": "Download TikTok Videos without Watermarks and Upload to Google Drive",
+    "category": "Video & Media",
+    "description": "Clean archiving utility bypassing typical ad-heavy third-party conversion websites.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "TikTok",
+      "Archiving",
+      "GoogleDrive",
+      "Media"
+    ]
+  },
+  {
+    "id": "bright_data_job_finder",
+    "name": "LinkedIn Job Finder Automation using Bright Data API & Google Sheets",
+    "category": "Productivity & Operations",
+    "description": "Structured tracking workflow for matching open professional recruitment listings.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "JobHunt",
+      "LinkedIn",
+      "BrightData",
+      "Sheets"
+    ]
+  },
+  {
+    "id": "audio_transcribe_drive_summary",
+    "name": "Use OpenAI to Transcribe Audio + Summarize with AI + Save to Google Drive",
+    "category": "Productivity & Operations",
+    "description": "Converts voice recordings into organized text files for searchable archiving.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Audio",
+      "Transcription",
+      "Whisper",
+      "Drive"
+    ]
+  },
+  {
+    "id": "content_scraper_airtable_seo",
+    "name": "Website Content Scraper & SEO Keyword Extractor with GPT-5-mini and Airtable",
+    "category": "SEO & Marketing",
+    "description": "Cleans HTML parsing output to store target keyword metrics directly into Airtable bases.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "SEO",
+      "Airtable",
+      "Scraper",
+      "Keywords"
+    ]
+  },
+  {
+    "id": "omnichannel_social_publisher",
+    "name": "Social Media Content Generator And Publisher | X, LinkedIn",
+    "category": "Social Media",
+    "description": "Synchronized multi-platform publishing engine for professional accounts.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "X",
+      "Twitter",
+      "LinkedIn",
+      "Omnichannel"
+    ]
+  },
+  {
+    "id": "google_trends_insights_sheets",
+    "name": "Extract Google Trends Keywords & Summarize Articles in Google Sheets",
+    "category": "SEO & Marketing",
+    "description": "Monitors emerging search topics and organizes content insights automatically.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "GoogleTrends",
+      "Trends",
+      "Sheets",
+      "Insights"
+    ]
+  },
+  {
+    "id": "custom_api_mcp_server",
+    "name": "Build your own CUSTOM API MCP server",
+    "category": "MCP Protocols",
+    "description": "Technical template demonstrating how to turn existing workflows into reusable MCP servers.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "CustomAPI",
+      "Server",
+      "Protocol"
+    ]
+  },
+  {
+    "id": "meeting_insights_agent",
+    "name": "AI Agent for realtime insights on meetings",
+    "category": "Productivity & Operations",
+    "description": "Processes conference audio to extract action items and decision metrics instantly.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Meetings",
+      "Insights",
+      "ActionItems",
+      "Transcripts"
+    ]
+  },
+  {
+    "id": "outlook_invoice_parser",
+    "name": "Parse Incoming Invoices From Outlook using AI Document Understanding",
+    "category": "Productivity & Operations",
+    "description": "Automated extraction parser designed for Microsoft email ecosystems.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Outlook",
+      "Invoices",
+      "Accounting",
+      "Microsoft"
+    ]
+  },
+  {
+    "id": "platform_qa_mcp_assistant",
+    "name": "AI-Powered Research Assistant for Platform Questions with GPT-4o and MCP",
+    "category": "MCP Protocols",
+    "description": "Specialized documentation support assistant answering complex platform logic questions.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "Documentation",
+      "Support",
+      "Architecture"
+    ]
+  },
+  {
+    "id": "social_media_amplifier",
+    "name": "AI-Powered Social Media Amplifier",
+    "category": "Social Media",
+    "description": "Repurposes core marketing pieces into varied platform-optimized post formats.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Amplifier",
+      "Repurposing",
+      "SocialMedia",
+      "Marketing"
+    ]
+  },
+  {
+    "id": "documentation_expert_gemini_rag",
+    "name": "Build a Documentation Expert Chatbot with Gemini RAG Pipeline",
+    "category": "Database & SQL",
+    "description": "Trains LLMs on custom technical documentation directories for accurate answers.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Gemini",
+      "RAG",
+      "Documentation",
+      "Chatbot"
+    ]
+  },
+  {
+    "id": "jina_multipage_scraper",
+    "name": "Essential Multipage Website Scraper with Jina.ai",
+    "category": "Web Scraping",
+    "description": "Turns complex target sites into clean LLM-friendly text blocks.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "JinaAI",
+      "Scraper",
+      "Markdown",
+      "Web"
+    ]
+  },
+  {
+    "id": "structured_prompt_maker",
+    "name": "AI Prompt Maker",
+    "category": "AI Chatbots & Agents",
+    "description": "Interactive utility for designing, refining, and testing structured prompt templates.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "PromptEngineering",
+      "Prompts",
+      "Templates",
+      "Refinement"
+    ]
+  },
+  {
+    "id": "cloud_spend_optimizer",
+    "name": "Cloud Spend Optimizer",
+    "category": "DevOps & Monitoring",
+    "description": "Analyzes infrastructure metrics to suggest cost-saving opportunities.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "CloudCost",
+      "DevOps",
+      "FinOps",
+      "AWS"
+    ]
+  },
+  {
+    "id": "nps_score_aggregator",
+    "name": "NPS Score Aggregator",
+    "category": "Productivity & Operations",
+    "description": "Collects and visualizes customer satisfaction scores from multiple sources.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "NPS",
+      "Feedback",
+      "CustomerExperience",
+      "Metrics"
+    ]
+  },
+  {
+    "id": "autoscaling_trigger",
+    "name": "Auto-Scaling Trigger",
+    "category": "DevOps & Monitoring",
+    "description": "Monitors server performance anomalies to trigger automated scaling operations.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "AutoScaling",
+      "Kubernetes",
+      "DevOps",
+      "Infrastructure"
+    ]
+  },
+  {
+    "id": "powerbi_embed_updater",
+    "name": "Power BI Embed Updater",
+    "category": "Database & SQL",
+    "description": "Keeps data dashboards synchronized across reporting environments.",
+    "trigger_type": "Schedule",
+    "nodes_count": 3,
+    "tags": [
+      "PowerBI",
+      "BI",
+      "Dashboards",
+      "Reporting"
+    ]
+  },
+  {
+    "id": "device_breakout_reporter",
+    "name": "Device Breakout Reporter",
+    "category": "DevOps & Monitoring",
+    "description": "Tracks hardware and client performance metrics in real-time.",
+    "trigger_type": "Schedule",
+    "nodes_count": 3,
+    "tags": [
+      "DeviceAnalytics",
+      "Clients",
+      "Hardware",
+      "Telemetry"
+    ]
+  },
+  {
+    "id": "session_replay_tagger",
+    "name": "Session Replay Tagger",
+    "category": "DevOps & Monitoring",
+    "description": "Analyzes user interaction patterns to tag usability bottlenecks.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "SessionReplay",
+      "UX",
+      "Bottlenecks",
+      "Analytics"
+    ]
+  },
+  {
+    "id": "release_notes_generator",
+    "name": "Release Notes Generator",
+    "category": "DevOps & Monitoring",
+    "description": "Synthesizes changelogs and pull requests into structured release summaries.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "ReleaseNotes",
+      "Changelog",
+      "GitHub",
+      "DevOps"
+    ]
+  },
+  {
+    "id": "opsgenie_alert_router",
+    "name": "OpsGenie Alert Router",
+    "category": "DevOps & Monitoring",
+    "description": "Manages operational alerts and streamlines incident response routing.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "OpsGenie",
+      "IncidentResponse",
+      "Alerting",
+      "DevOps"
+    ]
+  },
+  {
+    "id": "sheets_chatgpt5_assistant",
+    "name": "Talk to Your Google Sheets Using ChatGPT-5",
+    "category": "Database & SQL",
+    "description": "Enables natural language queries to interact directly with spreadsheet data rows.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "GoogleSheets",
+      "ChatGPT5",
+      "Spreadsheets",
+      "Data"
+    ]
+  },
+  {
+    "id": "tech_radar_advisor_rag",
+    "name": "Build an AI-Powered Tech Radar Advisor with SQL DB, RAG, and Routing Agents",
+    "category": "Database & SQL",
+    "description": "Combines vector search with structured databases to route and advise on technology trends.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "TechRadar",
+      "RAG",
+      "Routing",
+      "Architecture"
+    ]
+  },
+  {
+    "id": "deep_research_lead_magnet",
+    "name": "Deep Research - Sales Lead Magnet Agent",
+    "category": "Sales & Outreach",
+    "description": "Automated autonomous research agent tailored for prospecting and generating custom lead assets.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "DeepResearch",
+      "LeadMagnet",
+      "Sales",
+      "Prospecting"
+    ]
+  },
+  {
+    "id": "veo3_video_generator",
+    "name": "AI Video Generator with Google Veo3 API (Veo 3 Fast)",
+    "category": "Video & Media",
+    "description": "Generates quick-turnaround video files using advanced text-to-video API models.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Veo3",
+      "GoogleAI",
+      "Video",
+      "TextToVideo"
+    ]
+  },
+  {
+    "id": "animated_stories_creatomate",
+    "name": "Create Animated Stories using GPT-4o-mini, Midjourney, Kling and Creatomate API",
+    "category": "Video & Media",
+    "description": "End-to-end media pipeline connecting script generation, image creation, and video assembly.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "Stories",
+      "Animation",
+      "Creatomate",
+      "Midjourney"
+    ]
+  },
+  {
+    "id": "gmail_human_followup_reminder",
+    "name": "Automatic Reminders For Follow-ups with AI and Human in the loop Gmail",
+    "category": "Sales & Outreach",
+    "description": "Tracks client follow-up dates and drafts email check-ins requiring manual approval.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "FollowUps",
+      "Gmail",
+      "HumanInTheLoop",
+      "CRM"
+    ]
+  },
+  {
+    "id": "dexscreener_token_insights",
+    "name": "Get Real-time Crypto Token Insights via Telegram with DexScreener and GPT-4o",
+    "category": "Finance & Crypto",
+    "description": "Pulls live token data from DexScreener and translates metrics into readable summaries on Telegram.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "DexScreener",
+      "Crypto",
+      "Telegram",
+      "GPT4o"
+    ]
+  },
+  {
+    "id": "supabase_rag_crud_mcp",
+    "name": "MCP Supabase Server for AI Agent with RAG & Multi-Tenant CRUD",
+    "category": "MCP Protocols",
+    "description": "Implements a Model Context Protocol server exposing database query tools to LLMs.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "Supabase",
+      "CRUD",
+      "MultiTenant"
+    ]
+  },
+  {
+    "id": "siem_mitre_incident_enrichment",
+    "name": "Automate SIEM Alert Enrichment with MITRE ATT&CK, Qdrant & Zendesk in n8n",
+    "category": "DevOps & Monitoring",
+    "description": "Cross-references security incident logs with threat intel vectors and opens ticketing records.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "SIEM",
+      "Cybersecurity",
+      "MITRE",
+      "Zendesk"
+    ]
+  },
+  {
+    "id": "apollo_airtable_lead_pipeline",
+    "name": "Get Qualified Leads in One Click from Apollo to Airtable",
+    "category": "Sales & Outreach",
+    "description": "Scrapes and filters professional contact data directly into relational databases.",
+    "trigger_type": "Webhook",
+    "nodes_count": 3,
+    "tags": [
+      "Apollo",
+      "Airtable",
+      "Leads",
+      "OneClick"
+    ]
+  },
+  {
+    "id": "notion_article_summarizer",
+    "name": "AI Agent: Scrape, Summarize & Save Articles to Notion (Gemini, Browserless)",
+    "category": "Productivity & Operations",
+    "description": "Fetches external URL contents, condenses key points, and commits pages to Notion.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Notion",
+      "Gemini",
+      "Browserless",
+      "Summarizer"
+    ]
+  },
+  {
+    "id": "legal_assistant_rag",
+    "name": "AI Legal Assistant Agent \u2014 AI-Powered Legal Q&A with Document Retrieval",
+    "category": "AI Chatbots & Agents",
+    "description": "Specialized RAG setup indexing regulatory texts for precise question answering.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "Legal",
+      "Regulatory",
+      "RAG",
+      "Compliance"
+    ]
+  },
+  {
+    "id": "strava_ai_fitness_coach",
+    "name": "AI Fitness Coach Strava Data Analysis and Personalized Training Insights",
+    "category": "Productivity & Operations",
+    "description": "Pulls workout telemetry from fitness trackers to generate coaching feedback.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Strava",
+      "Fitness",
+      "Coach",
+      "Telemetry"
+    ]
+  },
+  {
+    "id": "sap_erp_invoice_pipeline",
+    "name": "Automated Invoice Processing with Telegram, GPT-4o, OCR and SAP Integration",
+    "category": "Finance & Crypto",
+    "description": "Enterprise-grade document routing connecting chat interfaces with ERP backends.",
+    "trigger_type": "Webhook",
+    "nodes_count": 5,
+    "tags": [
+      "SAP",
+      "ERP",
+      "Invoices",
+      "Enterprise"
+    ]
+  },
+  {
+    "id": "trustpilot_sentiment_analyzer",
+    "name": "Scrape Trustpilot Reviews with DeepSeek, Analyze Sentiment with OpenAI",
+    "category": "Web Scraping",
+    "description": "Extracts customer feedback pages and compiles product sentiment reports.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Trustpilot",
+      "Reviews",
+      "Sentiment",
+      "DeepSeek"
+    ]
+  },
+  {
+    "id": "gmail_mcp_toolkit",
+    "name": "Gmail MCP Server \u2013 Your All-in-One AI Email Toolkit",
+    "category": "MCP Protocols",
+    "description": "Exposes mail operations as an MCP server for agentic interaction.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "MCP",
+      "Gmail",
+      "Toolkit",
+      "Server"
+    ]
+  },
+  {
+    "id": "firecrawl_competitor_monitor",
+    "name": "Monitor competitors' websites for changes with OpenAI and Firecrawl",
+    "category": "SEO & Marketing",
+    "description": "Scrapes competitor landing pages periodically and summarizes structural updates.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "Firecrawl",
+      "Competitors",
+      "Monitoring",
+      "SEO"
+    ]
+  },
+  {
+    "id": "google_calendar_whatsapp_agent",
+    "name": "Manage Google Calendar via WhatsApp with GPT-4 Virtual Assistant",
+    "category": "Productivity & Operations",
+    "description": "Schedules and updates calendar events through WhatsApp messaging.",
+    "trigger_type": "Webhook",
+    "nodes_count": 4,
+    "tags": [
+      "WhatsApp",
+      "GoogleCalendar",
+      "Scheduling",
+      "Assistant"
+    ]
+  },
+  {
+    "id": "gmaps_lead_extractor",
+    "name": "Extract Business Leads from Google Maps with Dumpling AI to Google Sheets",
+    "category": "Sales & Outreach",
+    "description": "Gathers local business information for sales prospecting.",
+    "trigger_type": "Schedule",
+    "nodes_count": 4,
+    "tags": [
+      "GoogleMaps",
+      "LocalLeads",
+      "Scraping",
+      "GoogleSheets"
+    ]
+  }
+]

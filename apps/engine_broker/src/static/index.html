@@ -692,11 +692,19 @@
 
       <!-- Pre-Built Templates Grid -->
       <div style="margin-bottom: 2.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-          <h3 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
-            <span>📦</span> Pre-Built Automation Templates
-          </h3>
-          <span style="color: var(--text-muted); font-size: 0.85rem;" id="templates-count-badge">Loading templates...</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+              <span>📦</span> n8n Markets Automation Library
+            </h3>
+            <span style="color: var(--text-muted); font-size: 0.85rem;" id="templates-count-badge">Loading templates...</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <select id="template-category-filter" onchange="filterTemplates()" style="padding: 0.45rem 0.75rem; border-radius: 8px; background: #11141D; border: 1px solid var(--card-border); color: #FFF; font-size: 0.85rem;">
+              <option value="all">All Categories</option>
+            </select>
+            <input type="text" id="template-search-input" placeholder="Search templates (SEO, Telegram, Video, SQL)..." oninput="filterTemplates()" style="width: 280px; padding: 0.45rem 0.75rem; border-radius: 8px; background: #11141D; border: 1px solid var(--card-border); color: #FFF; font-size: 0.85rem;">
+          </div>
         </div>
         <div class="framework-grid" id="templates-container">
           <!-- Populated by loadTemplates() -->
@@ -1037,33 +1045,75 @@
       }
     }
 
+    let allLoadedTemplates = [];
+
     async function loadTemplates() {
       try {
-        const res = await fetch('/api/v1/workflows/templates');
-        const templates = await res.json();
-        const badge = document.getElementById('templates-count-badge');
-        if (badge) badge.textContent = `${templates.length} templates available`;
-        const container = document.getElementById('templates-container');
-        if (!container) return;
-        container.innerHTML = templates.map(t => `
-          <div class="framework-card">
-            <div>
-              <div class="fw-category">${t.category} • ${t.trigger_type.toUpperCase()}</div>
-              <div class="fw-name" style="font-size: 1.05rem;">${t.name}</div>
-              <div class="fw-desc">${t.description}</div>
-              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
-                <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">${t.nodes_count} Nodes</span>
-                ${(t.tags || []).map(tag => `<span style="background: #1E2536; color: var(--text-muted); font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 4px;">#${tag}</span>`).join('')}
-              </div>
-            </div>
-            <button class="fw-btn" onclick="deployTemplate('${t.id}', '${t.name}')">
-              Deploy Template →
-            </button>
-          </div>
-        `).join('');
+        const [tplRes, catRes] = await Promise.all([
+          fetch('/api/v1/workflows/templates'),
+          fetch('/api/v1/workflows/templates/categories')
+        ]);
+        allLoadedTemplates = await tplRes.json();
+        const categories = await catRes.json();
+
+        // Populate category dropdown
+        const catSelect = document.getElementById('template-category-filter');
+        if (catSelect && catSelect.options.length <= 1) {
+          categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            catSelect.appendChild(opt);
+          });
+        }
+
+        filterTemplates();
       } catch (e) {
         console.error('Failed to load templates:', e);
       }
+    }
+
+    function filterTemplates() {
+      const cat = (document.getElementById('template-category-filter')?.value || 'all').toLowerCase();
+      const q = (document.getElementById('template-search-input')?.value || '').toLowerCase().trim();
+
+      const filtered = allLoadedTemplates.filter(t => {
+        const matchesCat = cat === 'all' || t.category.toLowerCase() === cat;
+        const matchesQ = !q || (
+          t.name.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.category.toLowerCase().includes(q) ||
+          (t.tags || []).some(tag => String(tag).toLowerCase().includes(q))
+        );
+        return matchesCat && matchesQ;
+      });
+
+      const badge = document.getElementById('templates-count-badge');
+      if (badge) badge.textContent = `${filtered.length} of ${allLoadedTemplates.length} templates available`;
+
+      const container = document.getElementById('templates-container');
+      if (!container) return;
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">No templates found matching your filter criteria.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => `
+        <div class="framework-card">
+          <div>
+            <div class="fw-category">${t.category} • ${t.trigger_type.toUpperCase()}</div>
+            <div class="fw-name" style="font-size: 1.05rem;">${t.name}</div>
+            <div class="fw-desc">${t.description}</div>
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+              <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">${t.nodes_count} Nodes</span>
+              ${(t.tags || []).map(tag => `<span style="background: #1E2536; color: var(--text-muted); font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 4px;">#${tag}</span>`).join('')}
+            </div>
+          </div>
+          <button class="fw-btn" onclick="deployTemplate('${t.id}', '${t.name.replace(/'/g, "\\'")}')">
+            Deploy Template →
+          </button>
+        </div>
+      `).join('');
     }
 
     async function deployTemplate(templateId, templateName) {

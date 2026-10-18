@@ -90,8 +90,11 @@ class N8nAdapter(BaseEngineAdapter):
 
         return execution
 
-    def list_templates(self) -> List[Dict[str, Any]]:
-        return n8n_template_service.list_templates()
+    def list_templates(self, category: Optional[str] = None, query: Optional[str] = None, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        return n8n_template_service.list_templates(category=category, query=query, limit=limit)
+
+    def list_categories(self) -> List[str]:
+        return n8n_template_service.list_categories()
 
     def get_template(self, template_id: str) -> Optional[Dict[str, Any]]:
         return n8n_template_service.get_template(template_id)

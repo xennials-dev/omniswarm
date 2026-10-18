@@ -28,11 +28,17 @@ def _get_n8n_adapter() -> N8nAdapter:
         raise HTTPException(status_code=503, detail="n8n adapter is not active or available")
     return adapter
 
-@router.get("/templates")
-async def list_templates() -> List[Dict[str, Any]]:
-    """Lists all available pre-built N8N automation templates."""
+@router.get("/templates/categories")
+async def list_template_categories() -> List[str]:
+    """Lists all available template categories across the n8n Markets collection."""
     n8n = _get_n8n_adapter()
-    return n8n.list_templates()
+    return n8n.list_categories()
+
+@router.get("/templates")
+async def list_templates(category: Optional[str] = None, query: Optional[str] = None, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    """Lists all available pre-built N8N automation templates with optional filtering."""
+    n8n = _get_n8n_adapter()
+    return n8n.list_templates(category=category, query=query, limit=limit)
 
 @router.get("/templates/{template_id}")
 async def get_template(template_id: str) -> Dict[str, Any]:
