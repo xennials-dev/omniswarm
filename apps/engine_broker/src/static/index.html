@@ -626,8 +626,16 @@
 
     <!-- TAB 4: MCP REGISTRY -->
     <section id="tab-mcp" class="tab-content">
-      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem;">Model Context Protocol (MCP) Tool Bus</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Cross-platform tool discovery and bidirectional invocation bus.</p>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem;">Model Context Protocol (MCP) Tool Bus</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Cross-platform tool discovery and bidirectional invocation bus (20 active integrations).</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <input type="text" id="mcp-search" placeholder="Search 20 MCP tools..." oninput="filterMCPTools()" style="width: 240px; padding: 0.5rem 0.85rem; font-size: 0.85rem;">
+          <button class="btn-primary" onclick="openRegisterMCPModal()">+ Register MCP Server</button>
+        </div>
+      </div>
 
       <div class="table-container">
         <table>
@@ -636,12 +644,13 @@
               <th>Tool Name</th>
               <th>Description</th>
               <th>Engine Source</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody id="mcp-tbody">
             <tr>
-              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading MCP tools...</td>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading MCP tools...</td>
             </tr>
           </tbody>
         </table>
@@ -676,6 +685,36 @@
     </div>
   </div>
 
+  <!-- Register MCP Server Modal (Procedure B) -->
+  <div class="modal-backdrop" id="mcp-modal">
+    <div class="modal">
+      <h3 class="modal-title">Register MCP Server</h3>
+      <p class="modal-subtitle">Connect an external Model Context Protocol (MCP) server or tool to the OmniSwarm Tool Bus.</p>
+
+      <form id="mcp-form" onsubmit="submitRegisterMCP(event)">
+        <div class="form-group">
+          <label class="form-label">Tool Name</label>
+          <input type="text" id="mcp-tool-name" placeholder="e.g. github_repo_manager, stripe_billing_sync" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Engine Source</label>
+          <input type="text" id="mcp-engine-source" placeholder="e.g. GITHUB, N8N, LANGGRAPH, POSTGRES" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="mcp-description" rows="3" placeholder="Brief summary of tool functionality and external endpoints." required></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeRegisterMCPModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Register Server ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const FRAMEWORKS = [
       { id: 'langgraph', name: 'LangGraph', cat: 'Stateful Graph', desc: 'Cyclic multi-actor graphs with checkpoint persistence and drift checking.' },
@@ -689,6 +728,8 @@
       { id: 'smolagents', name: 'smolagents', cat: 'Code-First Agents', desc: 'Minimalist code-writing agents by Hugging Face.' },
       { id: 'mastra', name: 'Mastra', cat: 'TypeScript Agentic', desc: 'Modern TypeScript framework for building autonomous agents.' },
     ];
+
+    let allMcpTools = [];
 
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -729,6 +770,42 @@
 
     function closeLaunchModal() {
       document.getElementById('launch-modal').classList.remove('active');
+    }
+
+    function openRegisterMCPModal() {
+      document.getElementById('mcp-tool-name').value = '';
+      document.getElementById('mcp-engine-source').value = '';
+      document.getElementById('mcp-description').value = '';
+      document.getElementById('mcp-modal').classList.add('active');
+    }
+
+    function closeRegisterMCPModal() {
+      document.getElementById('mcp-modal').classList.remove('active');
+    }
+
+    async function submitRegisterMCP(e) {
+      e.preventDefault();
+      const name = document.getElementById('mcp-tool-name').value.trim();
+      const engine_source = document.getElementById('mcp-engine-source').value.trim();
+      const description = document.getElementById('mcp-description').value.trim();
+
+      try {
+        const res = await fetch('/api/v1/mcp/tools', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            engine_source,
+            description,
+            parameters: {}
+          })
+        });
+        if (!res.ok) throw new Error('Registration failed');
+        closeRegisterMCPModal();
+        await loadMCPTools();
+      } catch (err) {
+        alert('Failed to register MCP server: ' + err.message);
+      }
     }
 
     async function submitSwarm(e) {
@@ -828,18 +905,56 @@
     async function loadMCPTools() {
       try {
         const res = await fetch('/api/v1/mcp/tools');
-        const tools = await res.json();
-        document.getElementById('stat-mcp').textContent = tools.length;
-        const tbody = document.getElementById('mcp-tbody');
-        tbody.innerHTML = tools.map(t => `
-          <tr>
-            <td><strong style="color: var(--secondary);">${t.name}</strong></td>
-            <td style="color: var(--text-muted);">${t.description}</td>
-            <td><span style="background: #1E2536; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem;">${t.engine_source.toUpperCase()}</span></td>
-            <td><button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="alert('Invoking tool: ' + '${t.name}')">Test Invoke</button></td>
-          </tr>
-        `).join('');
+        allMcpTools = await res.json();
+        document.getElementById('stat-mcp').textContent = allMcpTools.length;
+        filterMCPTools();
       } catch (e) {}
+    }
+
+    function filterMCPTools() {
+      const q = (document.getElementById('mcp-search')?.value || '').toLowerCase().trim();
+      const filtered = allMcpTools.filter(t => 
+        t.name.toLowerCase().includes(q) || 
+        t.description.toLowerCase().includes(q) || 
+        t.engine_source.toLowerCase().includes(q)
+      );
+      renderMCPTable(filtered);
+    }
+
+    function renderMCPTable(tools) {
+      const tbody = document.getElementById('mcp-tbody');
+      if (!tbody) return;
+      if (tools.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No MCP tools matched your search query.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = tools.map(t => `
+        <tr>
+          <td><strong style="color: var(--secondary); font-family: monospace;">${t.name}</strong></td>
+          <td style="color: var(--text-muted); font-size: 0.85rem;">${t.description}</td>
+          <td><span style="background: #1E2536; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600;">${t.engine_source.toUpperCase()}</span></td>
+          <td>
+            <span style="display: inline-flex; align-items: center; gap: 0.35rem; color: #10B981; font-weight: 700; font-size: 0.75rem;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981;"></span>CONNECTED
+            </span>
+          </td>
+          <td><button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="testInvokeMCP('${t.name}')">Test Invoke</button></td>
+        </tr>
+      `).join('');
+    }
+
+    async function testInvokeMCP(toolName) {
+      try {
+        const res = await fetch(`/api/v1/mcp/tools/${encodeURIComponent(toolName)}/invoke`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ test_arg: "probe_ping", timestamp: Date.now() })
+        });
+        const data = await res.json();
+        alert(`[MCP Response: ${data.status.toUpperCase()}]\n${data.result}`);
+      } catch (err) {
+        alert('Test invoke failed: ' + err.message);
+      }
     }
 
     // Initialize
@@ -850,3 +965,4 @@
   </script>
 </body>
 </html>
+
