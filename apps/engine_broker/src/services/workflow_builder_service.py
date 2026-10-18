@@ -22,6 +22,15 @@ class WorkflowBuilderService:
         y_pos = 300
         spacing = 240
 
+        # Check for Consolidated Master Agent / Orchestrator request
+        is_master = any(k in p_lower for k in [
+            "consolidated master", "master agent", "unified runtime pipeline",
+            "master orchestration", "handles all active", "single unified runtime",
+            "consolidate", "orchestration pipeline"
+        ])
+        if is_master:
+            return self._build_consolidated_master_workflow(prompt, name, wf_id)
+
         # 1. Determine Trigger Node
         is_scheduled = any(k in p_lower for k in ["every", "cron", "hourly", "daily", "scheduled", "poll", "interval"])
         if is_scheduled:
@@ -134,6 +143,199 @@ class WorkflowBuilderService:
             nodes.append(action_node)
             connections[prev_node_name] = {"main": [[{"node": action_name, "type": "main", "index": 0}]]}
             prev_node_name = action_name
+
+        workflow_obj = {
+            "name": wf_name,
+            "nodes": nodes,
+            "connections": connections,
+            "active": True,
+            "settings": {
+                "executionOrder": "v1"
+            }
+        }
+
+        return {
+            "workflow_id": wf_id,
+            "name": wf_name,
+            "prompt": prompt,
+            "nodes_count": len(nodes),
+            "workflow": workflow_obj
+        }
+
+    def _build_consolidated_master_workflow(self, prompt: str, name: str, wf_id: str) -> Dict[str, Any]:
+        """
+        Synthesizes a Consolidated Master Orchestration Pipeline unifying webhooks,
+        schedules, multi-domain MCP dispatch, and telemetry aggregation.
+        """
+        wf_name = name or "Consolidated Master Agent Pipeline"
+
+        nodes = [
+            {
+                "parameters": {
+                    "httpMethod": "POST",
+                    "path": "omniswarm-master-agent",
+                    "responseMode": "onReceived"
+                },
+                "id": f"node_master_webhook_{wf_id}",
+                "name": "Master Webhook Ingress",
+                "type": "n8n-nodes-base.webhook",
+                "typeVersion": 2,
+                "position": [240, 200],
+                "webhookId": "wh-omniswarm-master-agent"
+            },
+            {
+                "parameters": {
+                    "rule": {
+                        "interval": [{"field": "minutes", "minutesInterval": 15}]
+                    }
+                },
+                "id": f"node_master_schedule_{wf_id}",
+                "name": "Master Schedule Watchdog",
+                "type": "n8n-nodes-base.scheduleTrigger",
+                "typeVersion": 1.2,
+                "position": [240, 420]
+            },
+            {
+                "parameters": {
+                    "jsCode": (
+                        "// OmniSwarm Master Agent Normalizer & Dispatch Router\n"
+                        "const input = $input.first().json;\n"
+                        "const isWebhook = !!(input.headers || input.body);\n"
+                        "return [{\n"
+                        "  json: {\n"
+                        "    timestamp: new Date().toISOString(),\n"
+                        "    orchestrator: 'OmniSwarm Consolidated Master Agent',\n"
+                        "    trigger_source: isWebhook ? 'webhook_ingress' : 'scheduled_watchdog',\n"
+                        "    event_id: 'evt_' + Math.random().toString(36).substring(2, 9),\n"
+                        "    payload: input,\n"
+                        "    domains: ['ai_reasoning', 'state_persistence', 'telemetry_alerts']\n"
+                        "  }\n"
+                        "}];"
+                    )
+                },
+                "id": f"node_master_normalizer_{wf_id}",
+                "name": "Unified Ingestion & Dispatch Normalizer",
+                "type": "n8n-nodes-base.code",
+                "typeVersion": 2,
+                "position": [500, 310]
+            },
+            {
+                "parameters": {
+                    "method": "POST",
+                    "url": "http://engine-broker:8000/api/v1/mcp/tools/openai_model_router/invoke",
+                    "sendBody": True,
+                    "specifyBody": "json",
+                    "jsonBody": (
+                        "={\n"
+                        "  \"prompt\": \"[Master Swarm Orchestrator] Triage and synthesize action plan for event: \" + JSON.stringify($json),\n"
+                        "  \"model\": \"gpt-4o\"\n"
+                        "}"
+                    )
+                },
+                "id": f"node_master_ai_{wf_id}",
+                "name": "LLM Swarm Intent Classifier",
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.2,
+                "position": [780, 180]
+            },
+            {
+                "parameters": {
+                    "method": "POST",
+                    "url": "http://engine-broker:8000/api/v1/mcp/tools/postgres_query_runner/invoke",
+                    "sendBody": True,
+                    "specifyBody": "json",
+                    "jsonBody": (
+                        "={\n"
+                        "  \"query\": \"SELECT count(*) FROM executions\",\n"
+                        "  \"params\": []\n"
+                        "}"
+                    )
+                },
+                "id": f"node_master_db_{wf_id}",
+                "name": "Multi-Domain State & Ledger Sync",
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.2,
+                "position": [780, 310]
+            },
+            {
+                "parameters": {
+                    "method": "POST",
+                    "url": "http://engine-broker:8000/api/v1/mcp/tools/slack_notifier_bot/invoke",
+                    "sendBody": True,
+                    "specifyBody": "json",
+                    "jsonBody": (
+                        "={\n"
+                        "  \"channel\": \"#omniswarm-master\",\n"
+                        "  \"message\": \"⚡ [Master Pipeline] Consolidated event \" + $json.event_id + \" processed successfully across active domains.\"\n"
+                        "}"
+                    )
+                },
+                "id": f"node_master_telemetry_{wf_id}",
+                "name": "Centralized Telemetry & Alert Gateway",
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.2,
+                "position": [780, 440]
+            },
+            {
+                "parameters": {
+                    "jsCode": (
+                        "// OmniSwarm Master Execution Summary\n"
+                        "const items = $input.all().map(i => i.json);\n"
+                        "return [{\n"
+                        "  json: {\n"
+                        "    status: 'success',\n"
+                        "    pipeline: 'Consolidated Master Agent Pipeline',\n"
+                        "    processed_at: new Date().toISOString(),\n"
+                        "    branches_executed: items.length,\n"
+                        "    summary: 'Consolidated event dispatched across AI Swarm, Ledger Sync, and Telemetry.'\n"
+                        "  }\n"
+                        "}];"
+                    )
+                },
+                "id": f"node_master_aggregator_{wf_id}",
+                "name": "Consolidated Runtime Aggregator",
+                "type": "n8n-nodes-base.code",
+                "typeVersion": 2,
+                "position": [1060, 310]
+            }
+        ]
+
+        connections = {
+            "Master Webhook Ingress": {
+                "main": [
+                    [{"node": "Unified Ingestion & Dispatch Normalizer", "type": "main", "index": 0}]
+                ]
+            },
+            "Master Schedule Watchdog": {
+                "main": [
+                    [{"node": "Unified Ingestion & Dispatch Normalizer", "type": "main", "index": 0}]
+                ]
+            },
+            "Unified Ingestion & Dispatch Normalizer": {
+                "main": [
+                    [
+                        {"node": "LLM Swarm Intent Classifier", "type": "main", "index": 0},
+                        {"node": "Multi-Domain State & Ledger Sync", "type": "main", "index": 0},
+                        {"node": "Centralized Telemetry & Alert Gateway", "type": "main", "index": 0}
+                    ]
+                ]
+            },
+            "LLM Swarm Intent Classifier": {
+                "main": [
+                    [{"node": "Consolidated Runtime Aggregator", "type": "main", "index": 0}]
+                ]
+            },
+            "Multi-Domain State & Ledger Sync": {
+                "main": [
+                    [{"node": "Consolidated Runtime Aggregator", "type": "main", "index": 0}]
+                ]
+            },
+            "Centralized Telemetry & Alert Gateway": {
+                "main": [
+                    [{"node": "Consolidated Runtime Aggregator", "type": "main", "index": 0}]
+                ]
+            }
+        }
 
         workflow_obj = {
             "name": wf_name,
