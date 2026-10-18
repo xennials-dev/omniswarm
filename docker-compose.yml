@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Core Database & Event Bus
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: omniswarm-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: omniswarm
+      POSTGRES_PASSWORD: omniswarm_secret
+      POSTGRES_DB: omniswarm_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omniswarm -d omniswarm_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: omniswarm-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================
+  # Dynamic Engine Broker (Control Plane)
+  # ==========================================
+  engine-broker:
+    build:
+      context: ./apps/engine_broker
+      dockerfile: Dockerfile
+    container_name: omniswarm-engine-broker
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://omniswarm:omniswarm_secret@postgres:5432/omniswarm_db
+      - REDIS_URL=redis://redis:6379/0
+      - LANGGRAPH_SIDECAR_URL=http://sidecar-langgraph:8100
+      - N8N_SIDECAR_URL=http://n8n:5678
+      - DEBUG=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/engine_broker:/app
+
+  # ==========================================
+  # Agent Engine Sidecars
+  # ==========================================
+  sidecar-langgraph:
+    build:
+      context: ./sidecars/agents/langgraph
+      dockerfile: Dockerfile
+    container_name: omniswarm-sidecar-langgraph
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+    environment:
+      - PORT=8100
+      - DEBUG=true
+    volumes:
+      - ./sidecars/agents/langgraph:/app
+
+  # ==========================================
+  # Workflow Automation Engines
+  # ==========================================
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: omniswarm-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=omniswarm_db
+      - DB_POSTGRESDB_USER=omniswarm
+      - DB_POSTGRESDB_PASSWORD=omniswarm_secret
+      - DB_POSTGRESDB_SCHEMA=n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  # ==========================================
+  # Ingress & API Gateway
+  # ==========================================
+  envoy:
+    image: envoyproxy/envoy:v1.30-latest
+    container_name: omniswarm-envoy
+    restart: unless-stopped
+    ports:
+      - "8080:8080" # Unified Gateway HTTP/REST
+      - "9901:9901" # Envoy Admin
+    volumes:
+      - ./deployments/envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - engine-broker
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
