@@ -60,8 +60,14 @@ async def health_check():
         "engines": engines
     }
 
-@app.get("/", tags=["Root"])
-async def root():
+@app.get("/", tags=["UI"])
+@app.get("/dashboard", tags=["UI"])
+async def serve_ui():
+    import os
+    from fastapi.responses import FileResponse
+    html_path = os.path.join(os.path.dirname(__file__), "static", "index.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path)
     return {
         "message": "Welcome to OmniSwarm Unified Platform API",
         "docs": "/docs",

@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniSwarm Unified Control Plane</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090B10;
+      --card-bg: #131722;
+      --card-border: #1E2536;
+      --primary: #6366F1;
+      --primary-glow: rgba(99, 102, 241, 0.25);
+      --secondary: #06B6D4;
+      --accent: #818CF8;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: rgba(19, 23, 34, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+    }
+
+    .badge-unified {
+      background: #1E2536;
+      color: var(--secondary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      color: var(--text);
+      background: var(--primary);
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Metrics Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: #2E3852;
+    }
+
+    .kpi-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+      opacity: 0.15;
+    }
+
+    .kpi-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* Framework Grid */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .framework-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .framework-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px var(--primary-glow);
+      transform: translateY(-3px);
+    }
+
+    .fw-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.4rem;
+    }
+
+    .fw-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .fw-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    .fw-btn {
+      background: linear-gradient(135deg, var(--primary), #4F46E5);
+      border: none;
+      color: #FFF;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: opacity 0.2s ease;
+      width: 100%;
+    }
+
+    .fw-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Stream Terminal */
+    .terminal-container {
+      background: #06070A;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 600px;
+    }
+
+    .terminal-header {
+      background: #11141D;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #FF5F56; }
+    .dot-yellow { background: #FFBD2E; }
+    .dot-green { background: #27C93F; }
+
+    .terminal-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-body {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #38BDF8;
+    }
+
+    .terminal-line {
+      margin-bottom: 0.4rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .terminal-line.success { color: #34D399; }
+    .terminal-line.warning { color: #FBBF24; }
+    .terminal-line.dim { color: #64748B; }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 520px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      animation: scaleUp 0.25s ease;
+    }
+
+    @keyframes scaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    textarea, input {
+      width: 100%;
+      background: #0B0E14;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus, input:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border: none;
+      color: #FFF;
+      padding: 0.6rem 1.4rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+
+    /* Execution Table */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #10141F;
+      padding: 1rem 1.25rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 3v3m0 12v3M3 12h3m12 0h3m-2.6-6.4-2.1 2.1m-6.6 6.6-2.1 2.1m0-10.8 2.1 2.1m6.6 6.6 2.1 2.1"></path>
+        </svg>
+      </div>
+      <div>
+        <span class="brand-title">OmniSwarm</span>
+        <span class="badge-unified">UNIFIED PLATFORM</span>
+      </div>
+    </a>
+
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('dashboard')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        Control Plane
+      </button>
+      <button class="nav-btn" onclick="switchTab('swarms')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Agent Swarms
+      </button>
+      <button class="nav-btn" onclick="switchTab('terminal')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+        Live Stream
+      </button>
+      <button class="nav-btn" onclick="switchTab('mcp')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
+        MCP Registry
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span id="header-status">BROKER ONLINE</span>
+      </div>
+      <a href="/docs" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Swagger Docs ↗</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- TAB 1: DASHBOARD -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">Active Swarm Frameworks <span>⚡</span></div>
+          <div class="kpi-value" id="stat-swarms">10</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Sidecar Engines Online <span>🛡️</span></div>
+          <div class="kpi-value" id="stat-sidecars">2 / 2</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Registered MCP Tools <span>🔧</span></div>
+          <div class="kpi-value" id="stat-mcp">2</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Total Executions <span>📊</span></div>
+          <div class="kpi-value" id="stat-executions">0</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700;">Live Execution Feed</h2>
+        <button class="btn-primary" onclick="openLaunchModal('langgraph', 'LangGraph')">+ Launch Swarm</button>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Execution ID</th>
+              <th>Target Engine</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="executions-tbody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading live executions...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 2: AGENT SWARMS -->
+    <section id="tab-swarms" class="tab-content">
+      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem;">Unified Agent Frameworks</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Deploy and orchestrate any of the top 10 open-source agent swarms via the Dynamic Engine Broker.</p>
+
+      <div class="framework-grid" id="frameworks-container"></div>
+    </section>
+
+    <!-- TAB 3: LIVE STREAM TERMINAL -->
+    <section id="tab-terminal" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800;">gRPC Live Execution Stream</h2>
+          <p style="color: var(--text-muted); font-size: 0.85rem;">Streaming real-time agent thought-chains, steps, and token drift evaluations.</p>
+        </div>
+        <button class="btn-secondary" onclick="simulateStream()">▶ Re-run Demo Stream</button>
+      </div>
+
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-yellow"></div>
+            <div class="dot dot-green"></div>
+          </div>
+          <div class="terminal-title">omniswarm-grpc-channel://localhost:50051/stream</div>
+          <div style="font-size: 0.75rem; color: var(--success); font-family: 'JetBrains Mono', monospace;">● CONNECTED</div>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-line dim">[OmniSwarm Stream Client] Ready. Waiting for active swarm dispatch...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MCP REGISTRY -->
+    <section id="tab-mcp" class="tab-content">
+      <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem;">Model Context Protocol (MCP) Tool Bus</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Cross-platform tool discovery and bidirectional invocation bus.</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tool Name</th>
+              <th>Description</th>
+              <th>Engine Source</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="mcp-tbody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading MCP tools...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Launch Swarm Modal -->
+  <div class="modal-backdrop" id="launch-modal">
+    <div class="modal">
+      <h3 class="modal-title" id="modal-title">Launch Swarm</h3>
+      <p class="modal-subtitle" id="modal-subtitle">Configure mission objectives for the engine sidecar.</p>
+
+      <form id="launch-form" onsubmit="submitSwarm(event)">
+        <input type="hidden" id="modal-engine" value="langgraph">
+        
+        <div class="form-group">
+          <label class="form-label">Swarm Run Name</label>
+          <input type="text" id="modal-run-name" value="Autonomous Synthesis Swarm" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Initial Goal / Mission Prompt</label>
+          <textarea id="modal-prompt" rows="3" required>Analyze multi-agent consensus and verify zero token drift across underlying sidecars.</textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeLaunchModal()">Cancel</button>
+          <button type="submit" class="btn-primary">Launch Swarm 🚀</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const FRAMEWORKS = [
+      { id: 'langgraph', name: 'LangGraph', cat: 'Stateful Graph', desc: 'Cyclic multi-actor graphs with checkpoint persistence and drift checking.' },
+      { id: 'crewai', name: 'CrewAI', cat: 'Role-Based Collaboration', desc: 'Role-playing multi-agent autonomous teams with delegation patterns.' },
+      { id: 'autogen', name: 'AutoGen', cat: 'Conversational Swarm', desc: 'Multi-agent chat conversations for coordinated task resolution.' },
+      { id: 'dify', name: 'Dify.ai', cat: 'LLM App Orchestrator', desc: 'Visual prompt pipelines, dataset retrieval, and agent execution.' },
+      { id: 'metagpt', name: 'MetaGPT', cat: 'Software Co. SOPs', desc: 'Software engineering simulation following standard operating procedures.' },
+      { id: 'chatdev', name: 'ChatDev', cat: 'Virtual Company', desc: 'Multi-agent simulation of full software development lifecycles.' },
+      { id: 'agno', name: 'Agno (Phidata)', cat: 'Multimodal Agents', desc: 'High-speed multimodal agents with persistent vector memory.' },
+      { id: 'pydantic_ai', name: 'PydanticAI', cat: 'Type-Safe Agents', desc: 'Production AI agents powered by strict Pydantic data validation.' },
+      { id: 'smolagents', name: 'smolagents', cat: 'Code-First Agents', desc: 'Minimalist code-writing agents by Hugging Face.' },
+      { id: 'mastra', name: 'Mastra', cat: 'TypeScript Agentic', desc: 'Modern TypeScript framework for building autonomous agents.' },
+    ];
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
+
+      const btn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.textContent.toLowerCase().includes(tabId));
+      if (btn) btn.classList.add('active');
+
+      if (tabId === 'swarms') renderFrameworks();
+      if (tabId === 'mcp') loadMCPTools();
+    }
+
+    function renderFrameworks() {
+      const container = document.getElementById('frameworks-container');
+      container.innerHTML = FRAMEWORKS.map(fw => `
+        <div class="framework-card">
+          <div>
+            <div class="fw-category">${fw.cat}</div>
+            <div class="fw-name">${fw.name}</div>
+            <div class="fw-desc">${fw.desc}</div>
+          </div>
+          <button class="fw-btn" onclick="openLaunchModal('${fw.id}', '${fw.name}')">
+            Launch ${fw.name} →
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function openLaunchModal(engineId, engineName) {
+      document.getElementById('modal-engine').value = engineId;
+      document.getElementById('modal-title').textContent = `Launch ${engineName}`;
+      document.getElementById('modal-subtitle').textContent = `Dispatch task to the ${engineName} sidecar container.`;
+      document.getElementById('launch-modal').classList.add('active');
+    }
+
+    function closeLaunchModal() {
+      document.getElementById('launch-modal').classList.remove('active');
+    }
+
+    async function submitSwarm(e) {
+      e.preventDefault();
+      const engine = document.getElementById('modal-engine').value;
+      const name = document.getElementById('modal-run-name').value;
+      const prompt = document.getElementById('modal-prompt').value;
+
+      closeLaunchModal();
+      switchTab('terminal');
+
+      const term = document.getElementById('terminal-body');
+      term.innerHTML = `<div class="terminal-line warning">[Broker] Dispatching swarm '${name}' to engine sidecar '${engine}'...</div>`;
+
+      try {
+        const res = await fetch('/api/v1/swarms/kickoff', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            engine,
+            initial_prompt: prompt,
+            roles: [{ role: 'Analyst', goal: 'Execute mission' }]
+          })
+        });
+        const data = await res.json();
+        
+        term.innerHTML += `<div class="terminal-line success">[Broker] Swarm accepted. Execution ID: ${data.execution_id} | Status: ${data.status}</div>`;
+        
+        // Listen to live stream
+        startStream(data.execution_id);
+        loadDashboard();
+      } catch (err) {
+        term.innerHTML += `<div class="terminal-line danger">[Error] Failed to dispatch: ${err.message}</div>`;
+      }
+    }
+
+    function startStream(executionId) {
+      const term = document.getElementById('terminal-body');
+      const evtSource = new EventSource(`/api/v1/swarms/executions/${executionId}/stream`);
+
+      evtSource.onmessage = function(e) {
+        try {
+          const item = JSON.parse(e.data);
+          const line = document.createElement('div');
+          line.className = 'terminal-line';
+          if (item.status === 5) {
+            line.className += ' success';
+            evtSource.close();
+          }
+          line.textContent = `${item.logChunk} | State: ${item.stateUpdateJson}`;
+          term.appendChild(line);
+          term.scrollTop = term.scrollHeight;
+        } catch (err) {}
+      };
+
+      evtSource.onerror = function() {
+        evtSource.close();
+      };
+    }
+
+    function simulateStream() {
+      startStream('demo_' + Date.now());
+    }
+
+    async function loadDashboard() {
+      try {
+        const healthRes = await fetch('/health');
+        const health = await healthRes.json();
+        
+        const engines = health.engines || {};
+        const healthyCount = Object.values(engines).filter(e => e.healthy).length;
+        document.getElementById('stat-sidecars').textContent = `${healthyCount} / ${Object.keys(engines).length}`;
+
+        const execRes = await fetch('/api/v1/swarms/executions');
+        const execs = await execRes.json();
+        document.getElementById('stat-executions').textContent = execs.length;
+
+        const tbody = document.getElementById('executions-tbody');
+        if (execs.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No executions recorded yet. Launch your first swarm above!</td></tr>`;
+        } else {
+          tbody.innerHTML = execs.map(ex => `
+            <tr>
+              <td style="font-family: monospace; font-size: 0.8rem; color: var(--accent);">${ex.execution_id.substring(0, 8)}...</td>
+              <td><strong>${ex.target_engine.toUpperCase()}</strong></td>
+              <td>${ex.category}</td>
+              <td><span style="color: ${ex.status === 'completed' ? '#34D399' : '#38BDF8'}; font-weight: 700;">${ex.status.toUpperCase()}</span></td>
+              <td style="color: var(--text-muted); font-size: 0.8rem;">${new Date(ex.created_at).toLocaleTimeString()}</td>
+              <td><button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="startStream('${ex.execution_id}'); switchTab('terminal');">View Stream</button></td>
+            </tr>
+          `).reverse().join('');
+        }
+      } catch (e) {}
+    }
+
+    async function loadMCPTools() {
+      try {
+        const res = await fetch('/api/v1/mcp/tools');
+        const tools = await res.json();
+        document.getElementById('stat-mcp').textContent = tools.length;
+        const tbody = document.getElementById('mcp-tbody');
+        tbody.innerHTML = tools.map(t => `
+          <tr>
+            <td><strong style="color: var(--secondary);">${t.name}</strong></td>
+            <td style="color: var(--text-muted);">${t.description}</td>
+            <td><span style="background: #1E2536; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem;">${t.engine_source.toUpperCase()}</span></td>
+            <td><button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="alert('Invoking tool: ' + '${t.name}')">Test Invoke</button></td>
+          </tr>
+        `).join('');
+      } catch (e) {}
+    }
+
+    // Initialize
+    renderFrameworks();
+    loadDashboard();
+    loadMCPTools();
+    setInterval(loadDashboard, 8000);
+  </script>
+</body>
+</html>
