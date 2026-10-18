@@ -1,0 +1,117 @@
+{
+  "id": "github_issue_triage",
+  "name": "GitHub Issue Triage & Swarm Dispatch",
+  "description": "Receives GitHub issue webhook payloads, classifies bug severity, and alerts an OmniSwarm agent team.",
+  "category": "Developer & DevOps",
+  "trigger_type": "Webhook",
+  "nodes_count": 4,
+  "tags": ["GitHub", "Triage", "Swarm", "Agents"],
+  "workflow": {
+    "name": "GitHub Issue Triage & Swarm Dispatch",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "github-issues",
+          "responseMode": "onReceived",
+          "responseData": "allEntries"
+        },
+        "id": "node_webhook",
+        "name": "GitHub Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [240, 300],
+        "webhookId": "github-issues-trigger"
+      },
+      {
+        "parameters": {
+          "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst title = body.issue?.title || 'Unknown Issue';\nconst isBug = (body.issue?.labels || []).some(l => l.name?.toLowerCase().includes('bug')) || title.toLowerCase().includes('fix');\n\nreturn [{\n  json: {\n    issue_id: body.issue?.number || 101,\n    title: title,\n    author: body.sender?.login || 'developer',\n    priority: isBug ? 'HIGH' : 'NORMAL',\n    action: isBug ? 'dispatch_analyst_swarm' : 'log_info'\n  }\n}];"
+        },
+        "id": "node_filter",
+        "name": "Classify Severity",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [460, 300]
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "cond_high_prio",
+                "leftValue": "={{ $json.priority }}",
+                "rightValue": "HIGH",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals"
+                }
+              }
+            ]
+          }
+        },
+        "id": "node_if",
+        "name": "Is High Priority?",
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [680, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://engine-broker:8000/api/v1/swarms/kickoff",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"name\": \"GitHub Issue Fixer Swarm #\" + $json.issue_id,\n  \"engine\": \"langgraph\",\n  \"initial_prompt\": \"Investigate and create PR for issue: \" + $json.title,\n  \"roles\": [{\"role\": \"Developer\", \"goal\": \"Fix code defect\"}]\n}"
+        },
+        "id": "node_dispatch",
+        "name": "Dispatch Swarm",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [920, 240]
+      }
+    ],
+    "connections": {
+      "GitHub Webhook": {
+        "main": [
+          [
+            {
+              "node": "Classify Severity",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Classify Severity": {
+        "main": [
+          [
+            {
+              "node": "Is High Priority?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Is High Priority?": {
+        "main": [
+          [
+            {
+              "node": "Dispatch Swarm",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    }
+  }
+}

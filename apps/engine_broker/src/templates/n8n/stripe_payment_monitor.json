@@ -1,0 +1,103 @@
+{
+  "id": "stripe_payment_monitor",
+  "name": "Stripe Charge Reconciliation & Customer Sync",
+  "description": "Monitors Stripe payment events, fetches customer data via MCP, and updates PostgreSQL accounts.",
+  "category": "Finance & Billing",
+  "trigger_type": "Webhook",
+  "nodes_count": 4,
+  "tags": ["Stripe", "Payments", "Postgres", "MCP"],
+  "workflow": {
+    "name": "Stripe Charge Reconciliation & Customer Sync",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "stripe-charges",
+          "responseMode": "onReceived"
+        },
+        "id": "node_webhook",
+        "name": "Stripe Webhook",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [240, 300],
+        "webhookId": "stripe-charges-trigger"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://engine-broker:8000/api/v1/mcp/tools/stripe_billing_sync/invoke",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"customer_id\": $json.data?.object?.customer || \"cus_sample_99\"\n}"
+        },
+        "id": "node_mcp_stripe",
+        "name": "Sync Stripe Profile",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [480, 300]
+      },
+      {
+        "parameters": {
+          "jsCode": "const stripeData = $input.first().json;\nreturn [{\n  json: {\n    customer_id: stripeData.customer_id || 'cus_sample_99',\n    amount_paid: 99.00,\n    currency: 'USD',\n    reconciled_at: new Date().toISOString()\n  }\n}];"
+        },
+        "id": "node_prep_sql",
+        "name": "Prepare DB Record",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [720, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://engine-broker:8000/api/v1/mcp/tools/postgres_query_runner/invoke",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"query\": \"INSERT INTO transactions (customer_id, amount, status) VALUES ($1, $2, 'PAID')\",\n  \"params\": [$json.customer_id, $json.amount_paid]\n}"
+        },
+        "id": "node_mcp_pg",
+        "name": "Insert Postgres Transaction",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [960, 300]
+      }
+    ],
+    "connections": {
+      "Stripe Webhook": {
+        "main": [
+          [
+            {
+              "node": "Sync Stripe Profile",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sync Stripe Profile": {
+        "main": [
+          [
+            {
+              "node": "Prepare DB Record",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Prepare DB Record": {
+        "main": [
+          [
+            {
+              "node": "Insert Postgres Transaction",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    }
+  }
+}

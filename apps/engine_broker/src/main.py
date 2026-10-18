@@ -124,6 +124,30 @@ async def startup_event():
             engine_source="n8n"
         ),
         MCPToolDefinition(
+            name="n8n_list_templates",
+            description="Discover available pre-configured N8N automation workflow templates in the catalog",
+            parameters={},
+            engine_source="n8n"
+        ),
+        MCPToolDefinition(
+            name="n8n_instantiate_template",
+            description="Instantiate and deploy a pre-built N8N workflow template with custom parameters",
+            parameters={"template_id": {"type": "string"}, "parameters": {"type": "object"}},
+            engine_source="n8n"
+        ),
+        MCPToolDefinition(
+            name="n8n_create_workflow",
+            description="Synthesize, validate, and deploy a custom N8N automation workflow graph from an agent prompt",
+            parameters={"prompt": {"type": "string"}, "name": {"type": "string"}},
+            engine_source="n8n"
+        ),
+        MCPToolDefinition(
+            name="n8n_list_active_workflows",
+            description="Query and inspect active automated N8N workflows and webhook trigger URLs",
+            parameters={},
+            engine_source="n8n"
+        ),
+        MCPToolDefinition(
             name="langgraph_evaluate_drift",
             description="Evaluates token drift and state machine consistency across swarm actors",
             parameters={"state": {"type": "object"}},

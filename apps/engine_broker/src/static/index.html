@@ -526,6 +526,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
         Live Stream
       </button>
+      <button class="nav-btn" onclick="switchTab('automations')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Automations (N8N)
+      </button>
       <button class="nav-btn" onclick="switchTab('mcp')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
         MCP Registry
@@ -656,6 +660,80 @@
         </table>
       </div>
     </section>
+
+    <!-- TAB: AUTOMATIONS & N8N BUILDER -->
+    <section id="tab-automations" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 0.3rem;">N8N Automation Templates & AI Workflow Builder</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Deploy production-ready workflow templates or let agent swarms synthesize dynamic node automation graphs.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <a href="http://localhost:5678" target="_blank" class="btn-secondary" style="text-decoration: none; display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; padding: 0.5rem 0.9rem;">
+            Open N8N Web UI ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- AI Workflow Generator Hero Box -->
+      <div style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(6, 182, 212, 0.08)); border: 1px solid rgba(79, 70, 229, 0.3); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;">
+          <span style="font-size: 1.25rem;">✨</span>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: #FFF;">AI Agent Workflow Synthesizer</h3>
+          <span style="background: rgba(79, 70, 229, 0.3); color: #818CF8; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 700;">AUTONOMOUS GRAPH SYNTHESIS</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Describe an end-to-end automation in natural language. The broker synthesizes valid N8N node topologies, wires data connections, and deploys it live into the N8N engine.</p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <input type="text" id="ai-wf-prompt" placeholder="e.g. Listen for Stripe payments, sync customer via MCP, and alert Slack channel #sales" style="flex: 1; min-width: 320px; padding: 0.75rem 1rem; border-radius: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); color: #FFF; font-size: 0.9rem;">
+          <button class="btn-primary" onclick="synthesizeWorkflow()" style="padding: 0.75rem 1.25rem;">Synthesize & Deploy Flow 🚀</button>
+        </div>
+        <div id="ai-wf-feedback" style="display: none; margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 8px; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; line-height: 1.5;"></div>
+      </div>
+
+      <!-- Pre-Built Templates Grid -->
+      <div style="margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            <span>📦</span> Pre-Built Automation Templates
+          </h3>
+          <span style="color: var(--text-muted); font-size: 0.85rem;" id="templates-count-badge">Loading templates...</span>
+        </div>
+        <div class="framework-grid" id="templates-container">
+          <!-- Populated by loadTemplates() -->
+        </div>
+      </div>
+
+      <!-- Active Workflows & Webhooks -->
+      <div style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+            <span>⚡</span> Active N8N Workflows & Webhooks
+          </h3>
+          <button class="btn-secondary" style="font-size: 0.75rem; padding: 0.3rem 0.6rem;" onclick="loadActiveWorkflows()">↻ Refresh Workflows</button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Workflow Name</th>
+                <th>Category</th>
+                <th>Trigger</th>
+                <th>Nodes</th>
+                <th>Webhook Endpoint</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="active-wf-tbody">
+              <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading active N8N workflows...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Launch Swarm Modal -->
@@ -743,6 +821,7 @@
 
       if (tabId === 'swarms') renderFrameworks();
       if (tabId === 'mcp') loadMCPTools();
+      if (tabId === 'automations') { loadTemplates(); loadActiveWorkflows(); }
     }
 
     function renderFrameworks() {
@@ -951,9 +1030,149 @@
           body: JSON.stringify({ test_arg: "probe_ping", timestamp: Date.now() })
         });
         const data = await res.json();
-        alert(`[MCP Response: ${data.status.toUpperCase()}]\n${data.result}`);
+        const display = typeof data.result === 'object' ? JSON.stringify(data.result, null, 2) : data.result;
+        alert(`[MCP Response: ${data.status.toUpperCase()}]\n${display}`);
       } catch (err) {
         alert('Test invoke failed: ' + err.message);
+      }
+    }
+
+    async function loadTemplates() {
+      try {
+        const res = await fetch('/api/v1/workflows/templates');
+        const templates = await res.json();
+        const badge = document.getElementById('templates-count-badge');
+        if (badge) badge.textContent = `${templates.length} templates available`;
+        const container = document.getElementById('templates-container');
+        if (!container) return;
+        container.innerHTML = templates.map(t => `
+          <div class="framework-card">
+            <div>
+              <div class="fw-category">${t.category} • ${t.trigger_type.toUpperCase()}</div>
+              <div class="fw-name" style="font-size: 1.05rem;">${t.name}</div>
+              <div class="fw-desc">${t.description}</div>
+              <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                <span style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 600;">${t.nodes_count} Nodes</span>
+                ${(t.tags || []).map(tag => `<span style="background: #1E2536; color: var(--text-muted); font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 4px;">#${tag}</span>`).join('')}
+              </div>
+            </div>
+            <button class="fw-btn" onclick="deployTemplate('${t.id}', '${t.name}')">
+              Deploy Template →
+            </button>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error('Failed to load templates:', e);
+      }
+    }
+
+    async function deployTemplate(templateId, templateName) {
+      if (!confirm(`Deploy automation template '${templateName}' to N8N?`)) return;
+      try {
+        const res = await fetch(`/api/v1/workflows/templates/${templateId}/deploy`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: `${templateName} (Instance)` })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Deployment failed');
+        alert(`🎉 Workflow '${data.name}' successfully deployed to N8N!\nWebhook: ${data.webhook_url}`);
+        await loadActiveWorkflows();
+      } catch (err) {
+        alert('Failed to deploy template: ' + err.message);
+      }
+    }
+
+    async function synthesizeWorkflow() {
+      const promptInput = document.getElementById('ai-wf-prompt');
+      const prompt = (promptInput.value || '').trim();
+      if (!prompt) {
+        alert('Please enter an automation prompt for the AI synthesizer.');
+        return;
+      }
+      const feedback = document.getElementById('ai-wf-feedback');
+      feedback.style.display = 'block';
+      feedback.style.background = 'rgba(79, 70, 229, 0.2)';
+      feedback.style.color = '#818CF8';
+      feedback.style.border = '1px solid rgba(79, 70, 229, 0.4)';
+      feedback.textContent = `[Broker AI] Synthesizing node graph and wiring connections for: "${prompt}"...`;
+
+      try {
+        const res = await fetch('/api/v1/workflows/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, deploy_immediately: true })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Synthesis failed');
+
+        feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+        feedback.style.color = '#34D399';
+        feedback.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+        feedback.innerHTML = `✅ <strong>Workflow Deployed:</strong> ${data.name} (${data.nodes_count} nodes)<br>• Webhook Endpoint: <code style="color: #FFF;">${data.webhook_url}</code><br>• Node Graph: ${data.workflow.nodes.map(n => n.name).join(' ➔ ')}`;
+
+        promptInput.value = '';
+        await loadActiveWorkflows();
+      } catch (err) {
+        feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+        feedback.style.color = '#F87171';
+        feedback.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        feedback.textContent = `❌ Synthesis failed: ${err.message}`;
+      }
+    }
+
+    async function loadActiveWorkflows() {
+      try {
+        const res = await fetch('/api/v1/workflows/active');
+        const workflows = await res.json();
+        const tbody = document.getElementById('active-wf-tbody');
+        if (!tbody) return;
+        if (workflows.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">No active workflows deployed yet. Pick a template or generate one above!</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = workflows.map(wf => `
+          <tr>
+            <td><strong style="color: #FFF;">${wf.name}</strong></td>
+            <td><span style="background: #1E2536; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.75rem;">${wf.category}</span></td>
+            <td><span style="color: var(--secondary); font-weight: 600; font-size: 0.8rem;">${wf.trigger_type}</span></td>
+            <td><span style="color: var(--text-muted); font-size: 0.85rem;">${wf.nodes_count}</span></td>
+            <td style="font-family: monospace; font-size: 0.75rem; color: #38BDF8;">${wf.webhook_url}</td>
+            <td>
+              <span style="display: inline-flex; align-items: center; gap: 0.35rem; color: #10B981; font-weight: 700; font-size: 0.75rem;">
+                <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981;"></span>ACTIVE
+              </span>
+            </td>
+            <td>
+              <button class="btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="testTriggerWorkflow('${wf.webhook_url}', '${wf.id}')">
+                Test Trigger
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error('Failed to load active workflows:', e);
+      }
+    }
+
+    async function testTriggerWorkflow(webhookUrl, workflowId) {
+      try {
+        const res = await fetch('/api/v1/workflows/trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            workflow_id: workflowId,
+            engine: "n8n",
+            payload: {
+              test_event: "omniswarm_manual_trigger",
+              timestamp: new Date().toISOString()
+            }
+          })
+        });
+        const data = await res.json();
+        alert(`[N8N Workflow Triggered]\nStatus: ${data.status.toUpperCase()}\nExecution ID: ${data.execution_id}`);
+      } catch (err) {
+        alert('Failed to trigger workflow: ' + err.message);
       }
     }
 
@@ -961,6 +1180,8 @@
     renderFrameworks();
     loadDashboard();
     loadMCPTools();
+    loadTemplates();
+    loadActiveWorkflows();
     setInterval(loadDashboard, 8000);
   </script>
 </body>

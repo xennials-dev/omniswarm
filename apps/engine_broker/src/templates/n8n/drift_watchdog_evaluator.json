@@ -1,0 +1,86 @@
+{
+  "id": "drift_watchdog_evaluator",
+  "name": "State Drift Watchdog & Health Prober",
+  "description": "Periodically polls OmniSwarm agent checkpoints, evaluates state drift with LangGraph, and logs anomalies.",
+  "category": "Governance & Observability",
+  "trigger_type": "Schedule",
+  "nodes_count": 3,
+  "tags": ["LangGraph", "Drift", "Cron", "Watchdog"],
+  "workflow": {
+    "name": "State Drift Watchdog & Health Prober",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "minutes",
+                "minutesInterval": 15
+              }
+            ]
+          }
+        },
+        "id": "node_schedule",
+        "name": "Every 15 Minutes",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [240, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://engine-broker:8000/api/v1/mcp/tools/langgraph_evaluate_drift/invoke",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"state\": {\n    \"probe_time\": $now,\n    \"consensus_threshold\": 0.95,\n    \"active_checkpoints\": 12\n  }\n}"
+        },
+        "id": "node_eval_drift",
+        "name": "Evaluate Token Drift",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [480, 300]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "http://engine-broker:8000/api/v1/mcp/tools/datadog_apm_telemetry/invoke",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"service\": \"omniswarm-drift-monitor\",\n  \"timeframe\": \"15m\"\n}"
+        },
+        "id": "node_emit_metrics",
+        "name": "Send APM Telemetry",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [720, 300]
+      }
+    ],
+    "connections": {
+      "Every 15 Minutes": {
+        "main": [
+          [
+            {
+              "node": "Evaluate Token Drift",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Evaluate Token Drift": {
+        "main": [
+          [
+            {
+              "node": "Send APM Telemetry",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    }
+  }
+}
