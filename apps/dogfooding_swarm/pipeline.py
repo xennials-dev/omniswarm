@@ -6,7 +6,7 @@ Continuously self-tests agent swarms, workflows, and generates synthetic video w
 import asyncio
 import logging
 from typing import Dict, Any, List
-from datetime import datetime
+from datetime import datetime, timezone
 from media_generator import MediaGenerationPipeline
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -46,16 +46,17 @@ class DogfoodingSwarmRunner:
             "registered_tools_verified": 2
         })
 
+        now_utc = datetime.now(timezone.utc)
         # 4. Generate Lifelike Video Demonstration
         logger.info("Triggering synthetic media pipeline for showcase generation...")
         video_metadata = await self.media_pipeline.generate_feature_walkthrough(
-            title=f"OmniSwarm Autonomous Update - {datetime.utcnow().strftime('%Y-%m-%d')}",
+            title=f"OmniSwarm Autonomous Update - {now_utc.strftime('%Y-%m-%d')}",
             script="OmniSwarm has completed self-validation cycle 140. All 10 agent frameworks and workflow engines report zero token drift.",
             model="wan-2.1"
         )
 
         return {
-            "cycle_timestamp": datetime.utcnow().isoformat(),
+            "cycle_timestamp": now_utc.isoformat(),
             "scenarios_tested": len(test_results),
             "results": test_results,
             "generated_media": video_metadata

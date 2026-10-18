@@ -19,11 +19,11 @@ class Settings(BaseSettings):
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
     # Sidecar Engine URLs
-    LANGGRAPH_SIDECAR_URL: str = os.getenv("LANGGRAPH_SIDECAR_URL", "http://localhost:8100")
-    CREWAI_SIDECAR_URL: str = os.getenv("CREWAI_SIDECAR_URL", "http://localhost:8200")
-    AUTOGEN_SIDECAR_URL: str = os.getenv("AUTOGEN_SIDECAR_URL", "http://localhost:8300")
-    N8N_SIDECAR_URL: str = os.getenv("N8N_SIDECAR_URL", "http://localhost:5678")
-    TEMPORAL_SIDECAR_URL: str = os.getenv("TEMPORAL_SIDECAR_URL", "http://localhost:7233")
+    LANGGRAPH_SIDECAR_URL: str = os.getenv("LANGGRAPH_SIDECAR_URL", "http://sidecar-langgraph:8100")
+    CREWAI_SIDECAR_URL: str = os.getenv("CREWAI_SIDECAR_URL", "http://sidecar-crewai:8200")
+    AUTOGEN_SIDECAR_URL: str = os.getenv("AUTOGEN_SIDECAR_URL", "http://sidecar-autogen:8300")
+    N8N_SIDECAR_URL: str = os.getenv("N8N_SIDECAR_URL", "http://n8n:5678")
+    TEMPORAL_SIDECAR_URL: str = os.getenv("TEMPORAL_SIDECAR_URL", "http://temporal:7233")
 
     # Security
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "omniswarm-dev-secret-key-32chars-min-len!!")

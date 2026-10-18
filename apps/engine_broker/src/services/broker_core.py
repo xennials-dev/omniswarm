@@ -15,6 +15,8 @@ from .adapters.langgraph_adapter import LangGraphAdapter
 from .adapters.crewai_adapter import CrewAIAdapter
 from .adapters.n8n_adapter import N8nAdapter
 
+from .adapters.generic_swarm_adapter import GenericSwarmAdapter
+
 class DynamicEngineBroker:
     """
     Central orchestration and mediation engine for OmniSwarm.
@@ -28,12 +30,21 @@ class DynamicEngineBroker:
         self._init_adapters()
 
     def _init_adapters(self):
-        # Register Tier-1 Agent adapters
+        # 1. Register Dedicated Tier-1 Agent adapters
         self.register_adapter(LangGraphAdapter(settings.LANGGRAPH_SIDECAR_URL))
         self.register_adapter(CrewAIAdapter(settings.CREWAI_SIDECAR_URL))
 
-        # Register Tier-1 Workflow adapters
+        # 2. Register Unified Adapters for Full Top 10 Swarm Frameworks
+        for engine_slug in [
+            "autogen", "dify", "metagpt", "chatdev",
+            "agno", "pydantic_ai", "smolagents", "mastra"
+        ]:
+            self.register_adapter(GenericSwarmAdapter(engine_slug, f"http://sidecar-{engine_slug}:8000"))
+
+        # 3. Register Workflow Automation Adapters
         self.register_adapter(N8nAdapter(settings.N8N_SIDECAR_URL))
+        self.register_adapter(GenericSwarmAdapter("temporal", settings.TEMPORAL_SIDECAR_URL))
+        self.register_adapter(GenericSwarmAdapter("activepieces", "http://activepieces:3000"))
 
     def register_adapter(self, adapter: BaseEngineAdapter):
         self._adapters[adapter.engine_name] = adapter
@@ -43,12 +54,20 @@ class DynamicEngineBroker:
 
     async def get_all_engine_health(self) -> Dict[str, Dict[str, Any]]:
         health_status = {}
-        for name, adapter in self._adapters.items():
-            is_healthy = await adapter.health_check()
-            health_status[name] = {
+        async def check_engine(name: str, adapter: BaseEngineAdapter):
+            try:
+                is_healthy = await asyncio.wait_for(adapter.health_check(), timeout=1.0)
+            except Exception:
+                is_healthy = False
+            return name, {
                 "healthy": is_healthy,
                 "sidecar_url": adapter.sidecar_url
             }
+
+        tasks = [check_engine(name, adapter) for name, adapter in self._adapters.items()]
+        results = await asyncio.gather(*tasks)
+        for name, data in results:
+            health_status[name] = data
         return health_status
 
     async def dispatch_swarm(self, request: CanonicalSwarmRequest) -> ExecutionRecord:

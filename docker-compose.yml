@@ -52,6 +52,7 @@ services:
       - DATABASE_URL=postgresql://omniswarm:omniswarm_secret@postgres:5432/omniswarm_db
       - REDIS_URL=redis://redis:6379/0
       - LANGGRAPH_SIDECAR_URL=http://sidecar-langgraph:8100
+      - CREWAI_SIDECAR_URL=http://sidecar-crewai:8200
       - N8N_SIDECAR_URL=http://n8n:5678
       - DEBUG=true
     depends_on:
@@ -78,6 +79,20 @@ services:
       - DEBUG=true
     volumes:
       - ./sidecars/agents/langgraph:/app
+
+  sidecar-crewai:
+    build:
+      context: ./sidecars/agents/crewai
+      dockerfile: Dockerfile
+    container_name: omniswarm-sidecar-crewai
+    restart: unless-stopped
+    ports:
+      - "8200:8200"
+    environment:
+      - PORT=8200
+      - DEBUG=true
+    volumes:
+      - ./sidecars/agents/crewai:/app
 
   # ==========================================
   # Workflow Automation Engines
