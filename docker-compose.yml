@@ -46,7 +46,7 @@ services:
     container_name: omniswarm-engine-broker
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8085:8000"
       - "50051:50051"
     environment:
       - DATABASE_URL=postgresql://omniswarm:omniswarm_secret@postgres:5432/omniswarm_db
