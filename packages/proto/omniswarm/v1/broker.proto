@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package omniswarm.v1;
+
+option go_package = "github.com/omniswarm/omniswarm/proto/v1;omniswarmv1";
+option java_multiple_files = true;
+option java_package = "com.omniswarm.v1";
+
+enum EngineCategory {
+  ENGINE_CATEGORY_UNSPECIFIED = 0;
+  ENGINE_CATEGORY_AGENT_SWARM = 1;
+  ENGINE_CATEGORY_WORKFLOW = 2;
+}
+
+enum AgentEngine {
+  AGENT_ENGINE_UNSPECIFIED = 0;
+  AGENT_ENGINE_LANGGRAPH = 1;
+  AGENT_ENGINE_CREWAI = 2;
+  AGENT_ENGINE_AUTOGEN = 3;
+  AGENT_ENGINE_DIFY = 4;
+  AGENT_ENGINE_METAGPT = 5;
+  AGENT_ENGINE_CHATDEV = 6;
+  AGENT_ENGINE_AGNO = 7;
+  AGENT_ENGINE_PYDANTIC_AI = 8;
+  AGENT_ENGINE_SMOLAGENTS = 9;
+  AGENT_ENGINE_MASTRA = 10;
+}
+
+enum WorkflowEngine {
+  WORKFLOW_ENGINE_UNSPECIFIED = 0;
+  WORKFLOW_ENGINE_N8N = 1;
+  WORKFLOW_ENGINE_ACTIVEPIECES = 2;
+  WORKFLOW_ENGINE_WINDMILL = 3;
+  WORKFLOW_ENGINE_KESTRA = 4;
+  WORKFLOW_ENGINE_AIRFLOW = 5;
+  WORKFLOW_ENGINE_TEMPORAL = 6;
+  WORKFLOW_ENGINE_CAMUNDA = 7;
+  WORKFLOW_ENGINE_NODE_RED = 8;
+  WORKFLOW_ENGINE_ARGO = 9;
+  WORKFLOW_ENGINE_TRIGGER_DEV = 10;
+}
+
+enum ExecutionStatus {
+  EXECUTION_STATUS_UNSPECIFIED = 0;
+  EXECUTION_STATUS_PENDING = 1;
+  EXECUTION_STATUS_QUEUED = 2;
+  EXECUTION_STATUS_RUNNING = 3;
+  EXECUTION_STATUS_WAITING_FOR_INPUT = 4;
+  EXECUTION_STATUS_COMPLETED = 5;
+  EXECUTION_STATUS_FAILED = 6;
+  EXECUTION_STATUS_CANCELLED = 7;
+}
+
+message SwarmRole {
+  string role = 1;
+  string goal = 2;
+  string backstory = 3;
+  repeated string tools = 4;
+  string llm_model = 5;
+}
+
+message KickoffSwarmRequest {
+  string name = 1;
+  AgentEngine engine = 2;
+  string initial_prompt = 3;
+  repeated SwarmRole roles = 4;
+  map<string, string> context = 5;
+  repeated string mcp_tools_enabled = 6;
+  bool sandbox_required = 7;
+}
+
+message ExecutionRecord {
+  string execution_id = 1;
+  string target_engine = 2;
+  EngineCategory category = 3;
+  ExecutionStatus status = 4;
+  string error_message = 5;
+  repeated string logs = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message TriggerWorkflowRequest {
+  string workflow_id = 1;
+  WorkflowEngine engine = 2;
+  string payload_json = 3;
+  bool synchronous = 4;
+}
+
+message MCPToolDefinition {
+  string name = 1;
+  string description = 2;
+  string parameters_schema_json = 3;
+  string engine_source = 4;
+}
+
+message ListMCPToolsRequest {}
+
+message ListMCPToolsResponse {
+  repeated MCPToolDefinition tools = 1;
+}
+
+message InvokeMCPToolRequest {
+  string tool_name = 1;
+  string arguments_json = 2;
+}
+
+message InvokeMCPToolResponse {
+  string tool_name = 1;
+  string status = 2;
+  string result_json = 3;
+}
+
+message StreamExecutionEventsRequest {
+  string execution_id = 1;
+}
+
+message ExecutionEvent {
+  string execution_id = 1;
+  ExecutionStatus status = 2;
+  string log_chunk = 3;
+  string state_update_json = 4;
+  string timestamp = 5;
+}
+
+service OmniSwarmBrokerService {
+  rpc KickoffSwarm (KickoffSwarmRequest) returns (ExecutionRecord);
+  rpc TriggerWorkflow (TriggerWorkflowRequest) returns (ExecutionRecord);
+  rpc GetExecution (ExecutionRecord) returns (ExecutionRecord);
+  rpc StreamExecutionEvents (StreamExecutionEventsRequest) returns (stream ExecutionEvent);
+  rpc ListMCPTools (ListMCPToolsRequest) returns (ListMCPToolsResponse);
+  rpc InvokeMCPTool (InvokeMCPToolRequest) returns (InvokeMCPToolResponse);
+}
